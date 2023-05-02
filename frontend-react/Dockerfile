@@ -11,7 +11,9 @@ COPY ./package.json .
 
 RUN npm install 
 
-COPY . . 
+COPY . .
+
+VOLUME ["src", "node_modules"]
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]

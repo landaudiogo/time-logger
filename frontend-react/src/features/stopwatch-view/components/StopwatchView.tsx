@@ -4,13 +4,13 @@ import DailyRecords from "./DailyRecords";
 import { LapRecord } from "../types";
 
 
-export default function StopwatchView() { 
-    const [records, setRecords] = useState<Array<LapRecord>>([]);
+export default function StopwatchView() {
+    const [record, setRecord] = useState<LapRecord | null>(null);
 
     return (
         <div>
-            <Stopwatch setRecords={setRecords}/>
-            <DailyRecords records={records}/>
+            <Stopwatch setRecord={setRecord} />
+            <DailyRecords record={record} />
         </div>
     );
 }

@@ -1,20 +1,15 @@
 import React, { useState, useRef } from "react";
-import { ElapsedTimeType, LapRecord } from "../types";
+import { LapRecord } from "../types";
 
-function getStringElapsedTime(elapsedTime: ElapsedTimeType) { 
-    const hours = elapsedTime.hours > 9 ? `${elapsedTime.hours}` : `0${elapsedTime.hours}`;
-    const minutes = elapsedTime.minutes > 9 ? `${elapsedTime.minutes}` : `0${elapsedTime.minutes}`;
-    const seconds = elapsedTime.seconds > 9 ? `${elapsedTime.seconds}` : `0${elapsedTime.seconds}`;
-    return `${hours}:${minutes}:${seconds}`;
-}
-const defaultElapsedTime: ElapsedTimeType = { 
-    hours: 0, 
-    minutes: 0, 
-    seconds: 0,
+function getStringElapsedTime(elapsedTime: number) {
+    return new Date(elapsedTime).toISOString()
+        .split("T")[1]
+        .replace("Z", "")
+        .split(".")[0];
 }
 
 type StopwatchPropsType = {
-    setRecords: React.Dispatch<React.SetStateAction<LapRecord[]>>
+    setRecord: React.Dispatch<React.SetStateAction<LapRecord | null>>
 }
 
 export default function Stopwatch(
@@ -22,41 +17,34 @@ export default function Stopwatch(
 ) {
     const startTime = useRef<number | null>(null);
     const currentTimer = useRef<NodeJS.Timer | null>(null);
-    const [elapsedTime, setElapsedTime] = useState<ElapsedTimeType>(defaultElapsedTime);
+    const [elapsedTime, setElapsedTime] = useState<number>(0);
+    const setRecord = props.setRecord
 
-    function handleTimerEvent() { 
+    function handleTimerEvent() {
         const now = Date.now();
-        if(!startTime.current)
+        if (!startTime.current)
             throw new Error("startTime cannot be falsy when handling timer event.")
-        const timeDifference = now - startTime.current;
-        setElapsedTime({
-            hours: Math.floor(timeDifference / 1000 / 60 / 60) % 24, 
-            minutes: Math.floor(timeDifference / 1000 / 60) % 60, 
-            seconds: Math.floor(timeDifference / 1000) % 60
-        });
+        setElapsedTime(now - startTime.current);
     }
 
     function handleStart() {
         if (startTime.current || currentTimer.current)
             return;
-        startTime.current = Date.now(); 
+        startTime.current = Date.now();
         currentTimer.current = setInterval(handleTimerEvent, 1000);
     }
 
-    function handleStop() { 
+    function handleStop() {
         if (!currentTimer.current || !startTime.current)
             return;
-        setElapsedTime({hours: 0, minutes: 0, seconds: 0});
+        setElapsedTime(0);
         const start = startTime.current;
         startTime.current = null;
         clearInterval(currentTimer.current);
         currentTimer.current = null;
-        props.setRecords((current) => {
-            const newArray = [...current, {start: start, end: Date.now()}]; 
-            return newArray;
-        })
+        setRecord({ start: start, end: Date.now() });
     }
-    
+
     return (
         <div>
             <h1>{getStringElapsedTime(elapsedTime)}</h1>

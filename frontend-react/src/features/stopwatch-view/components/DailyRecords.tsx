@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LapRecord } from "../types";
 
 type DailyRecordsPropsType = {
-    records: Array<LapRecord>
+    record: LapRecord | null
 }
 
 export default function DailyRecords(
     props: DailyRecordsPropsType
 ) {
-    const records = props.records;
+    const record = props.record;
+    const [records, setRecords] = useState<Array<LapRecord>>([])
+
+    useEffect(() => {
+        if(!record) 
+            return
+        setRecords((curr) => [...curr, record])
+    }, [record])
 
     return (
         <div>
-            {records.map((elem) => {
+            {records.map((elem: LapRecord, idx) => {
                 var startDatetimeString = new Date(elem.start).toISOString();
                 startDatetimeString = startDatetimeString
                     .replace('T', ' ')
@@ -24,7 +31,7 @@ export default function DailyRecords(
                     .replace('Z', '')
                     .split('.')[0];
                 return (
-                    <p>
+                    <p key={idx}>
                         {startDatetimeString} | {endDatetimeString}
                     </p>
                 );
