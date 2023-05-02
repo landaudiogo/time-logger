@@ -6,6 +6,7 @@ import { LapRecord } from "../types";
 
 export default function StopwatchView() {
     const [record, setRecord] = useState<LapRecord | null>(null);
+    
 
     return (
         <div>

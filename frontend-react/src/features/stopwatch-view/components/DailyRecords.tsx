@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LapRecord } from "../types";
+import { prettyPrintTimestamp } from "../lib/dateParsing"
 
 type DailyRecordsPropsType = {
     record: LapRecord | null
@@ -9,30 +10,26 @@ export default function DailyRecords(
     props: DailyRecordsPropsType
 ) {
     const record = props.record;
-    const [records, setRecords] = useState<Array<LapRecord>>([])
+    const [records, setRecords] = useState<Map<number, LapRecord>>(new Map())
 
     useEffect(() => {
         if(!record) 
             return
-        setRecords((curr) => [...curr, record])
+        setRecords((curr: Map<number, LapRecord>) => {
+            const newMap = new Map(curr)
+            newMap.set(record.lap, record)
+            return newMap;
+        });
     }, [record])
 
     return (
         <div>
-            {records.map((elem: LapRecord, idx) => {
-                var startDatetimeString = new Date(elem.start).toISOString();
-                startDatetimeString = startDatetimeString
-                    .replace('T', ' ')
-                    .replace('Z', '')
-                    .split('.')[0];
-                var endDatetimeString = new Date(elem.end).toISOString();
-                endDatetimeString = endDatetimeString
-                    .replace('T', ' ')
-                    .replace('Z', '')
-                    .split('.')[0];
+            {Array.from(records).map(([number, lapRecord]) => {
+                var startDatetimeString = prettyPrintTimestamp(lapRecord.start);
+                var endDatetimeString = prettyPrintTimestamp(lapRecord.end);
                 return (
-                    <p key={idx}>
-                        {startDatetimeString} | {endDatetimeString}
+                    <p key={lapRecord.lap}>
+                        {startDatetimeString} | {endDatetimeString} | {lapRecord.tag}
                     </p>
                 );
             })}
