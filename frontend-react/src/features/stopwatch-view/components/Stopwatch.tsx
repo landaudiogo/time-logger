@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LapRecord } from "../types";
 import { useElapsedTime } from "../hooks/useTimer"
 import { getStringElapsedTime } from "../lib/dateParsing"

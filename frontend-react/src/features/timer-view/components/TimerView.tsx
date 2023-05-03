@@ -1,7 +1,13 @@
-import React from "react"
+import React, {useState} from "react"
+import { DailyRecords, LapRecord } from "features/stopwatch-view"
+import Timer from "./Timer"
 
-export default function() { 
+export default function() {
+    const [record, setRecord] = useState<LapRecord | null>(null);
     return (
-        <p>TimerView</p>
+        <div>
+            <Timer setRecord={setRecord}/>
+            <DailyRecords record={record} />
+        </div>
     );
 }
