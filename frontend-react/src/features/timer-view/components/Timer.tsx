@@ -36,6 +36,7 @@ export default function Timer(props: TimerPropsType) {
         if (timerUnit === TimerUnit.Hours) {
             val = val > 23 ? 23 : val;
             val = val < 0 ? 0 : val;
+            val = val - Math.floor(curr.getTimezoneOffset()/60);
             totalTimer.current = new Date(totalTimer.current);
             totalTimer.current.setHours(val);
         } else if (timerUnit === TimerUnit.Minutes) {
@@ -63,11 +64,11 @@ export default function Timer(props: TimerPropsType) {
     }
 
     function handleStart() {
-        if (!(timer.getHours() || timer.getMinutes() || timer.getSeconds()))
+        if (!(totalTimer.current.getTime()%86400))
             return
         setDisabled(true);
         startTime.current = Date.now();
-        intervalRef.current = setInterval(handleInterval, 100);
+        intervalRef.current = setInterval(handleInterval, 1000);
     }
 
     function handleStop() {
@@ -81,9 +82,21 @@ export default function Timer(props: TimerPropsType) {
 
     return (
         <div>
-            <input onChange={onChangeTimer(TimerUnit.Hours)} disabled={disabled} />
-            :<input onChange={onChangeTimer(TimerUnit.Minutes)} disabled={disabled} />
-            :<input onChange={onChangeTimer(TimerUnit.Seconds)} disabled={disabled} />
+            <input 
+                onChange={onChangeTimer(TimerUnit.Hours)} 
+                disabled={disabled} 
+                value={prettyPrintTimestamp(timer.getTime()).split(":")[0]}
+            />
+            :<input 
+                onChange={onChangeTimer(TimerUnit.Minutes)} 
+                disabled={disabled} 
+                value={prettyPrintTimestamp(timer.getTime()).split(":")[1]}
+            />
+            :<input 
+                onChange={onChangeTimer(TimerUnit.Seconds)} 
+                disabled={disabled} 
+                value={prettyPrintTimestamp(timer.getTime()).split(":")[2]}
+            />
             <br />
             <p>{prettyPrintTimestamp(timer.getTime())}</p>
             <button onClick={handleStart}>Start</button>
