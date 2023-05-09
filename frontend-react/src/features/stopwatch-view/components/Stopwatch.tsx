@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { LapRecord, StopwatchState } from "../types";
+import React, { useEffect } from "react";
+import { StopwatchState } from "../types";
 import { useStopwatch } from "../hooks/useStopwatch"
 import { getStringElapsedTime } from "../lib/dateParsing"
+import { useAppDispatch } from "store";
+import { addRecord } from "../store/recordsSlice";
+import { tagAdded } from "../store/stopwatchSlice";
 
 
-type StopwatchPropsType = {
-    setRecord: React.Dispatch<React.SetStateAction<LapRecord | null>>
-}
-
-export default function Stopwatch(props: StopwatchPropsType) {
-    const [tag, setTag] = useState<string>("");
-    const lapCount = useRef<number>(0);
+export default function Stopwatch() {
+    const dispatch = useAppDispatch();
     const {
         elapsedTime,
         stopwatch,
@@ -23,19 +21,14 @@ export default function Stopwatch(props: StopwatchPropsType) {
             case StopwatchState.Stopped:
                 if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
-                props.setRecord({
-                    lap: lapCount.current,
-                    start: stopwatch.startTime,
-                    end: stopwatch.endTime,
-                    tag: tag,
-                })
-                lapCount.current = lapCount.current + 1;
+                dispatch(addRecord());
                 break;
         }
-    }, [stopwatch])
+    }, [stopwatch]);
 
     function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
-        setTag(e.currentTarget.value)
+        dispatch(tagAdded({tag: e.currentTarget.value}))
+
     }
 
     return (

@@ -1,7 +1,9 @@
 import stopwatchReducer, {
-    selectStopwatch, stopwatchStarted, stopwatchStopped
+    selectStopwatch, stopwatchStarted, stopwatchStopped, tagAdded
 } from "./stopwatchSlice";
-import recordsReducer from "./recordsSlice";
+import recordsReducer, {
+    selectRecords, addRecord
+} from "./recordsSlice";
 
-export { stopwatchReducer, selectStopwatch, stopwatchStarted, stopwatchStopped };
-export { recordsReducer };
+export { stopwatchReducer, selectStopwatch, stopwatchStarted, stopwatchStopped, tagAdded};
+export { recordsReducer, selectRecords, addRecord };

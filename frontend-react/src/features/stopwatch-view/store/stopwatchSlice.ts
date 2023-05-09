@@ -1,40 +1,49 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { StopwatchState } from "../types";
-
-type StopwatchType = {
-    state: StopwatchState,
-    startTime: number | null,
-    endTime: number | null,
-}
+import { StopwatchState, StopwatchType } from "../types";
 
 const initialState: StopwatchType = {
     state: StopwatchState.Initialized,
     startTime: null,
     endTime: null,
+    tag: "",
+}
+
+type TagAddedType = {
+    tag: string
 }
 
 const stopwatchSlice = createSlice({
     name: "stopwatch",
     initialState,
     reducers: {
+        stopwatchInitialized(stopwatch, action) {
+            stopwatch.state = StopwatchState.Initialized;
+            stopwatch.startTime = null;
+            stopwatch.endTime = null;
+        },
         stopwatchStarted(stopwatch, action) {
-            return {
-                state: StopwatchState.Started, 
-                startTime: Date.now(),
-                endTime: null,
-            };
+            stopwatch.state = StopwatchState.Started;
+            stopwatch.startTime = Date.now();
+            stopwatch.endTime = null;
         },
         stopwatchStopped(stopwatch, action) {
             stopwatch.state = StopwatchState.Stopped;
             stopwatch.endTime = Date.now();
+
+        },
+        tagAdded(stopwatch, action: PayloadAction<TagAddedType>) {
+            stopwatch.tag = action.payload.tag;
         }
 
     }
 });
 
-const selectStopwatch = (state: RootState) => state.stopwatch;
+const selectStopwatch = (state: RootState): StopwatchType => state.stopwatch;
 
-export const { stopwatchStarted, stopwatchStopped } = stopwatchSlice.actions;
 export { selectStopwatch };
+export const { 
+    stopwatchInitialized, stopwatchStarted, stopwatchStopped, 
+    tagAdded 
+} = stopwatchSlice.actions;
 export default stopwatchSlice.reducer;

@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import Stopwatch from "./Stopwatch";
 import DailyRecords from "./DailyRecords";
-import { LapRecord } from "../types";
 
 
 export default function StopwatchView() {
-    const [record, setRecord] = useState<LapRecord | null>(null);
-    
     return (
         <div>
-            <Stopwatch setRecord={setRecord} />
-            <DailyRecords record={record} />
+            <Link to="/timer">timer</Link>
+            <Stopwatch />
+            <DailyRecords />
         </div>
     );
 }

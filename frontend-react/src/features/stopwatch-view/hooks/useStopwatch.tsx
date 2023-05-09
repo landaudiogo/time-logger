@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectStopwatch, stopwatchStarted, stopwatchStopped } from "../store";
+import { StopwatchType, StopwatchState } from "../types";
 
 export function useStopwatch() {
     const stopwatch = useSelector(selectStopwatch);
-    const stopwatchRef = useRef(stopwatch);
+    const stopwatchRef = useRef<StopwatchType>(stopwatch);
     stopwatchRef.current = stopwatch;
     const dispatch = useDispatch();
     const intervalRef = useRef<NodeJS.Timer | null>(null);
@@ -31,8 +32,10 @@ export function useStopwatch() {
         const stopwatch = stopwatchRef.current;
         if (stopwatch.startTime && stopwatch.endTime)
             return; 
+        if (stopwatch.state !== StopwatchState.Started)
+            return;
         if (!intervalRef.current)
-            throw new Error("Missing references");
+            throw new Error("Missing intervalRef");
         setElapsedTime(0);
         dispatch(stopwatchStopped({}))
         clearInterval(intervalRef.current);

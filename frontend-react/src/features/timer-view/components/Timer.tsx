@@ -1,23 +1,20 @@
 import React, { useState, useRef, useEffect } from "react"
-import { LapRecord, prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
+import { prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
+import { tagAdded, addRecord } from "features/stopwatch-view/store";
+import { useAppDispatch } from "store"
 
-type TimerPropsType = {
-    setRecord: React.Dispatch<React.SetStateAction<LapRecord | null>>
-}
 enum TimerUnit {
     Hours, Minutes, Seconds
 }
 
-
 const DefaultTimer: Date = new Date(0);
 
-export default function Timer(props: TimerPropsType) {
-    const { elapsedTime, stopwatch, handleStart, handleStop} = useStopwatch();
+export default function Timer() {
+    const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
+    const dispatch = useAppDispatch();
     const [timerRemaining, setTimerRemaining] = useState<Date>(DefaultTimer);
     const [timerDuration, setTimerDuration] = useState<Date>(DefaultTimer);
     const timerDurationRef = useRef<Date>(timerDuration);
-    const lapCount = useRef<number>(0);
-    const [tag, setTag] = useState<string>("");
     timerDurationRef.current = timerDuration;
 
     useEffect(() => {
@@ -29,17 +26,11 @@ export default function Timer(props: TimerPropsType) {
     }, [elapsedTime, timerDuration])
 
     useEffect(() => {
-        switch(stopwatch.state) {
-            case(StopwatchState.Stopped): 
+        switch (stopwatch.state) {
+            case (StopwatchState.Stopped):
                 if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
-                props.setRecord({
-                    lap: lapCount.current,
-                    start: stopwatch.startTime,
-                    end: stopwatch.endTime,
-                    tag: tag,
-                })
-                lapCount.current = lapCount.current + 1;
+                dispatch(addRecord());
                 break;
         }
     }, [stopwatch])
@@ -52,7 +43,13 @@ export default function Timer(props: TimerPropsType) {
     }
 
     function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
-        setTag(e.currentTarget.value)
+        dispatch(tagAdded({tag: e.currentTarget.value}));
+    }
+
+    function onStart() {
+        if (timerDuration.getTime() <= 0)
+            return;
+        handleStart();
     }
 
     function handleTimerInput(value: string, timerUnit: TimerUnit) {
@@ -64,7 +61,7 @@ export default function Timer(props: TimerPropsType) {
         if (timerUnit === TimerUnit.Hours) {
             val = val > 23 ? 23 : val;
             val = val < 0 ? 0 : val;
-            val = val - Math.floor(curr.getTimezoneOffset()/60);
+            val = val - Math.floor(curr.getTimezoneOffset() / 60);
             timerDurationRef.current = new Date(timerDurationRef.current);
             timerDurationRef.current.setHours(val);
         } else if (timerUnit === TimerUnit.Minutes) {
@@ -84,25 +81,25 @@ export default function Timer(props: TimerPropsType) {
     const disabled = stopwatch.state === StopwatchState.Started;
     return (
         <div>
-            <input 
-                onChange={onChangeTimer(TimerUnit.Hours)} 
-                disabled={disabled} 
+            <input
+                onChange={onChangeTimer(TimerUnit.Hours)}
+                disabled={disabled}
                 value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[0]}
             />
-            :<input 
-                onChange={onChangeTimer(TimerUnit.Minutes)} 
-                disabled={disabled} 
+            :<input
+                onChange={onChangeTimer(TimerUnit.Minutes)}
+                disabled={disabled}
                 value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[1]}
             />
-            :<input 
-                onChange={onChangeTimer(TimerUnit.Seconds)} 
-                disabled={disabled} 
+            :<input
+                onChange={onChangeTimer(TimerUnit.Seconds)}
+                disabled={disabled}
                 value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[2]}
             />
             <br />
             <input onChange={handleTagInput} />
             <p>{prettyPrintTimestamp(timerRemaining.getTime())}</p>
-            <button onClick={handleStart}>Start</button>
+            <button onClick={onStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
         </div>
     )
