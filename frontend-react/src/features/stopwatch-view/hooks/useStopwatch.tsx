@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectStopwatch, stopwatchStarted, stopwatchStopped } from "../store";
 import { StopwatchType, StopwatchState } from "../types";
@@ -11,6 +11,17 @@ export function useStopwatch() {
     const intervalRef = useRef<NodeJS.Timer | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
 
+    useEffect(() => {
+        if (stopwatchRef.current.state !== StopwatchState.Started)
+            return;
+        intervalRef.current = setInterval(handleTimerEvent, 1000);
+        return () => {
+            if (!intervalRef.current)
+                return;
+            clearInterval(intervalRef.current);
+        };
+    }, [])
+    
     function handleTimerEvent() {
         if (!stopwatchRef.current.startTime)
             throw new Error("startTime has to be initialized");
