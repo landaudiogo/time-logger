@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
+import { useDispatch } from "react-redux";
 import { prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
 import { tagAdded, addRecord } from "features/stopwatch-view/store";
-import { useAppDispatch } from "store"
+import { AppDispatch } from "store"
 
 enum TimerUnit {
     Hours, Minutes, Seconds
@@ -11,7 +12,7 @@ const DefaultTimer: Date = new Date(0);
 
 export default function Timer() {
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
-    const dispatch = useAppDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const [timerRemaining, setTimerRemaining] = useState<Date>(DefaultTimer);
     const [timerDuration, setTimerDuration] = useState<Date>(DefaultTimer);
     const timerDurationRef = useRef<Date>(timerDuration);
@@ -97,7 +98,7 @@ export default function Timer() {
                 value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[2]}
             />
             <br />
-            <input onChange={handleTagInput} />
+            <input onChange={handleTagInput} value={stopwatch.tag} />
             <p>{prettyPrintTimestamp(timerRemaining.getTime())}</p>
             <button onClick={onStart}>Start</button>
             <button onClick={handleStop}>Stop</button>

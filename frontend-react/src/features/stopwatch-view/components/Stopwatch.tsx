@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { StopwatchState } from "../types";
 import { useStopwatch } from "../hooks/useStopwatch"
 import { getStringElapsedTime } from "../lib/dateParsing"
-import { useAppDispatch } from "store";
+import { AppDispatch } from "store";
 import { addRecord } from "../store/recordsSlice";
 import { tagAdded } from "../store/stopwatchSlice";
 
 
 export default function Stopwatch() {
-    const dispatch = useAppDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const {
         elapsedTime,
         stopwatch,
@@ -37,7 +38,7 @@ export default function Stopwatch() {
             <button onClick={handleStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
             <br />
-            <input onChange={handleTagInput} />
+            <input onChange={handleTagInput} value={stopwatch.tag}/>
         </div>
     );
 }
