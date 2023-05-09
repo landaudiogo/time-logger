@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react"
-import { LapRecord, prettyPrintTimestamp } from "features/stopwatch-view"
+import React, { useState, useRef, useEffect } from "react"
+import { LapRecord, prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
 import { TimerType } from "../types"
 
 type TimerPropsType = {
@@ -13,12 +13,38 @@ enum TimerUnit {
 const DefaultTimer: Date = new Date(0);
 
 export default function Timer(props: TimerPropsType) {
-    const setRecord = props.setRecord
-    const [timer, setTimer] = useState<Date>(DefaultTimer)
-    const totalTimer = useRef<Date>(DefaultTimer);
-    const [disabled, setDisabled] = useState<boolean>(false);
-    const intervalRef = useRef<NodeJS.Timer | null>(null);
-    const startTime = useRef<number>(0)
+    const { elapsedTime, stopwatch, handleStart, handleStop} = useStopwatch();
+    const [timerRemaining, setTimerRemaining] = useState<Date>(DefaultTimer);
+    const [timerDuration, setTimerDuration] = useState<Date>(DefaultTimer);
+    const timerDurationRef = useRef<Date>(timerDuration);
+    const lapCount = useRef<number>(0);
+    const [tag, setTag] = useState<string>("");
+    const disabled = stopwatch.stopwatchState === StopwatchState.Started;
+    timerDurationRef.current = timerDuration;
+
+    useEffect(() => {
+        if (timerDuration.getTime() - elapsedTime < 0) {
+            handleStop();
+        }
+        const remainingTimeDate = new Date(timerDuration.getTime() - elapsedTime);
+        setTimerRemaining(remainingTimeDate)
+    }, [elapsedTime, timerDuration])
+
+    useEffect(() => {
+        switch(stopwatch.stopwatchState) {
+            case(StopwatchState.Stopped): 
+                if (stopwatch.startTime === undefined || stopwatch.endTime === undefined)
+                    throw new Error("stopwatch in inconsistent state")
+                props.setRecord({
+                    lap: lapCount.current,
+                    start: stopwatch.startTime,
+                    end: stopwatch.endTime,
+                    tag: tag,
+                })
+                lapCount.current = lapCount.current + 1;
+                break;
+        }
+    }, [stopwatch])
 
     function onChangeTimer(timerUnit: TimerUnit) {
         const handleTimerCallback = (e: React.FormEvent<HTMLInputElement>) => {
@@ -27,57 +53,34 @@ export default function Timer(props: TimerPropsType) {
         return handleTimerCallback
     }
 
+    function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
+        setTag(e.currentTarget.value)
+    }
+
     function handleTimerInput(value: string, timerUnit: TimerUnit) {
         var val = 0;
         val = parseInt(value);
-        const curr = totalTimer.current;
+        const curr = timerDurationRef.current;
         if (isNaN(val))
             val = 0
         if (timerUnit === TimerUnit.Hours) {
             val = val > 23 ? 23 : val;
             val = val < 0 ? 0 : val;
             val = val - Math.floor(curr.getTimezoneOffset()/60);
-            totalTimer.current = new Date(totalTimer.current);
-            totalTimer.current.setHours(val);
+            timerDurationRef.current = new Date(timerDurationRef.current);
+            timerDurationRef.current.setHours(val);
         } else if (timerUnit === TimerUnit.Minutes) {
             val = val > 59 ? 59 : val;
             val = val < 0 ? 0 : val;
-            totalTimer.current = new Date(totalTimer.current);
-            totalTimer.current.setMinutes(val);
+            timerDurationRef.current = new Date(timerDurationRef.current);
+            timerDurationRef.current.setMinutes(val);
         } else if (timerUnit === TimerUnit.Seconds) {
             val = val > 59 ? 59 : val;
             val = val < 0 ? 0 : val;
-            totalTimer.current = new Date(totalTimer.current);
-            totalTimer.current.setSeconds(val);
+            timerDurationRef.current = new Date(timerDurationRef.current);
+            timerDurationRef.current.setSeconds(val);
         }
-        setTimer(totalTimer.current);
-    }
-
-    function handleInterval() {
-        const diff = Date.now() - startTime.current;
-        const totalMiliSeconds = totalTimer.current.getTime()%86400;
-        if ((totalMiliSeconds - diff) < 0) { 
-            handleStop();
-            return;
-        }
-        setTimer(new Date(timer.getTime() - diff));
-    }
-
-    function handleStart() {
-        if (!(totalTimer.current.getTime()%86400))
-            return
-        setDisabled(true);
-        startTime.current = Date.now();
-        intervalRef.current = setInterval(handleInterval, 1000);
-    }
-
-    function handleStop() {
-        if (!intervalRef.current)
-            return
-        setDisabled(false);
-        totalTimer.current = DefaultTimer;
-        setTimer(totalTimer.current)
-        clearInterval(intervalRef.current);
+        setTimerDuration(timerDurationRef.current);
     }
 
     return (
@@ -85,20 +88,21 @@ export default function Timer(props: TimerPropsType) {
             <input 
                 onChange={onChangeTimer(TimerUnit.Hours)} 
                 disabled={disabled} 
-                value={prettyPrintTimestamp(timer.getTime()).split(":")[0]}
+                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[0]}
             />
             :<input 
                 onChange={onChangeTimer(TimerUnit.Minutes)} 
                 disabled={disabled} 
-                value={prettyPrintTimestamp(timer.getTime()).split(":")[1]}
+                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[1]}
             />
             :<input 
                 onChange={onChangeTimer(TimerUnit.Seconds)} 
                 disabled={disabled} 
-                value={prettyPrintTimestamp(timer.getTime()).split(":")[2]}
+                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[2]}
             />
             <br />
-            <p>{prettyPrintTimestamp(timer.getTime())}</p>
+            <input onChange={handleTagInput} />
+            <p>{prettyPrintTimestamp(timerRemaining.getTime())}</p>
             <button onClick={handleStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
         </div>
