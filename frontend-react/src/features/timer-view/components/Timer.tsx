@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
 import { LapRecord, prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
-import { TimerType } from "../types"
 
 type TimerPropsType = {
     setRecord: React.Dispatch<React.SetStateAction<LapRecord | null>>
@@ -19,7 +18,6 @@ export default function Timer(props: TimerPropsType) {
     const timerDurationRef = useRef<Date>(timerDuration);
     const lapCount = useRef<number>(0);
     const [tag, setTag] = useState<string>("");
-    const disabled = stopwatch.stopwatchState === StopwatchState.Started;
     timerDurationRef.current = timerDuration;
 
     useEffect(() => {
@@ -31,9 +29,9 @@ export default function Timer(props: TimerPropsType) {
     }, [elapsedTime, timerDuration])
 
     useEffect(() => {
-        switch(stopwatch.stopwatchState) {
+        switch(stopwatch.state) {
             case(StopwatchState.Stopped): 
-                if (stopwatch.startTime === undefined || stopwatch.endTime === undefined)
+                if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
                 props.setRecord({
                     lap: lapCount.current,
@@ -83,6 +81,7 @@ export default function Timer(props: TimerPropsType) {
         setTimerDuration(timerDurationRef.current);
     }
 
+    const disabled = stopwatch.state === StopwatchState.Started;
     return (
         <div>
             <input 

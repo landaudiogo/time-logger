@@ -1,33 +1,17 @@
 import { useState, useRef } from "react";
-import { LapRecord } from "../types"
-
-
-export enum StopwatchState {
-    Initialized,
-    Started,
-    Stopped
-}
-
-type StopwatchType = {
-    stopwatchState: StopwatchState,
-    startTime?: number,
-    endTime?: number,
-}
-
-const DefaultStopwatch: StopwatchType = { 
-    stopwatchState: StopwatchState.Initialized,
-}
+import { useSelector, useDispatch } from "react-redux";
+import { selectStopwatch, stopwatchStarted, stopwatchStopped } from "../store";
 
 export function useStopwatch() {
-    const [stopwatch, setStopwatch] = useState<StopwatchType>(DefaultStopwatch);
-    const stopwatchRef = useRef<StopwatchType>(stopwatch);
+    const stopwatch = useSelector(selectStopwatch);
+    const stopwatchRef = useRef(stopwatch);
+    stopwatchRef.current = stopwatch;
+    const dispatch = useDispatch();
     const intervalRef = useRef<NodeJS.Timer | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
 
-    stopwatchRef.current = stopwatch;
-
     function handleTimerEvent() {
-        if (stopwatchRef.current.startTime === undefined)
+        if (!stopwatchRef.current.startTime)
             throw new Error("startTime has to be initialized");
         const startTime = stopwatchRef.current.startTime;
         const now = Date.now();
@@ -37,13 +21,9 @@ export function useStopwatch() {
     function handleStart() {
         const startTime = stopwatchRef.current.startTime;
         const stopTime = stopwatchRef.current.endTime;
-        if (startTime && stopTime === undefined)
+        if (startTime && !stopTime)
             return;
-
-        setStopwatch({
-            startTime: Date.now(),
-            stopwatchState: StopwatchState.Started
-        });
+        dispatch(stopwatchStarted({}));
         intervalRef.current = setInterval(handleTimerEvent, 1000);
     }
 
@@ -54,13 +34,7 @@ export function useStopwatch() {
         if (!intervalRef.current)
             throw new Error("Missing references");
         setElapsedTime(0);
-        setStopwatch((curr) => (
-            { 
-                ...curr, 
-                endTime: Date.now(),
-                stopwatchState: StopwatchState.Stopped,
-            }
-        ));
+        dispatch(stopwatchStopped({}))
         clearInterval(intervalRef.current);
         intervalRef.current = null;
     }

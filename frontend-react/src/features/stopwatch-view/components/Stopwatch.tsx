@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LapRecord } from "../types";
-import { StopwatchState, useStopwatch } from "../hooks/useStopwatch"
+import { LapRecord, StopwatchState } from "../types";
+import { useStopwatch } from "../hooks/useStopwatch"
 import { getStringElapsedTime } from "../lib/dateParsing"
 
 
@@ -18,11 +18,10 @@ export default function Stopwatch(props: StopwatchPropsType) {
         handleStop,
     } = useStopwatch();
 
-
     useEffect(() => {
-        switch (stopwatch.stopwatchState) {
+        switch (stopwatch.state) {
             case StopwatchState.Stopped:
-                if (stopwatch.startTime === undefined || stopwatch.endTime === undefined)
+                if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
                 props.setRecord({
                     lap: lapCount.current,
@@ -33,7 +32,6 @@ export default function Stopwatch(props: StopwatchPropsType) {
                 lapCount.current = lapCount.current + 1;
                 break;
         }
-
     }, [stopwatch])
 
     function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
