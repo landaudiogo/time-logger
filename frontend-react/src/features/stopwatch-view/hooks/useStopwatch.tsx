@@ -14,7 +14,10 @@ export function useStopwatch() {
     useEffect(() => {
         if (stopwatchRef.current.state !== StopwatchState.Started)
             return;
+        if (!stopwatchRef.current.startTime)
+            throw new Error("Inconsistent stopwatch state");
         intervalRef.current = setInterval(handleTimerEvent, 1000);
+        setElapsedTime(Date.now() - stopwatchRef.current.startTime);
         return () => {
             if (!intervalRef.current)
                 return;
