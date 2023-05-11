@@ -1,5 +1,5 @@
 
-FROM node:13.12.0-alpine
+FROM node:20.1.0-alpine3.17
 
 # set working directory
 WORKDIR /app
@@ -7,13 +7,9 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY ./package.json . 
+RUN npm install serve
 
-RUN npm install 
-
-COPY . .
-
-VOLUME ["src", "node_modules"]
+ADD ./build ./build
 
 # start app
-CMD ["npm", "run", "start"]
+CMD ["serve", "-s", "build", "-l", "3000"]
