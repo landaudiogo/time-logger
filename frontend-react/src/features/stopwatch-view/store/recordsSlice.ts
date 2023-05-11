@@ -35,7 +35,6 @@ const recordsSlice = createSlice({
     reducers: {
         recordAdded: {
             reducer(state, action: PayloadAction<RecordAddedAction>) {
-                console.log(action);
                 const payload = action.payload;
                 state.records[payload.lap] = action.payload;
             },

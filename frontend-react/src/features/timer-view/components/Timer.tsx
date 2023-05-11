@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react"
 import { useDispatch } from "react-redux";
 import { prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
 import { tagAdded, addRecord } from "features/stopwatch-view/store";
-import { AppDispatch } from "store"
+import { AppDispatch } from "store";
+import bell from "assets/bell.mp3";
 
 enum TimerUnit {
     Hours, Minutes, Seconds
@@ -29,6 +30,8 @@ export default function Timer() {
     useEffect(() => {
         switch (stopwatch.state) {
             case (StopwatchState.Stopped):
+                const a = new Audio(bell);
+                a.play();
                 if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
                 dispatch(addRecord());
@@ -103,5 +106,5 @@ export default function Timer() {
             <button onClick={onStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
         </div>
-    )
+    );
 }
