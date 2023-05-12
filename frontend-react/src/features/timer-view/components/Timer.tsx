@@ -65,9 +65,8 @@ export default function Timer() {
         if (timerUnit === TimerUnit.Hours) {
             val = val > 23 ? 23 : val;
             val = val < 0 ? 0 : val;
-            val = val - Math.floor(curr.getTimezoneOffset() / 60);
             timerDurationRef.current = new Date(timerDurationRef.current);
-            timerDurationRef.current.setHours(val);
+            timerDurationRef.current.setUTCHours(val);
         } else if (timerUnit === TimerUnit.Minutes) {
             val = val > 59 ? 59 : val;
             val = val < 0 ? 0 : val;

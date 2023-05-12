@@ -7,8 +7,5 @@ export function getStringElapsedTime(elapsedTime: number) {
 
 export function prettyPrintTimestamp(timestamp: number) {
     const epoch = Math.ceil(timestamp/1000)*1000;
-    return new Date(epoch).toISOString()
-        .replace('T', ' ')
-        .replace('Z', '')
-        .split('.')[0].split(" ")[1]; 
+    return new Date(epoch).toUTCString().split(" ")[4]; 
 }
