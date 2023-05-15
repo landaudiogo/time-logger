@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { LapRecord } from "../types";
+import React from "react";
 import { prettyPrintTimestamp } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector } from "react-redux";
@@ -36,8 +35,8 @@ export default function DailyRecords() {
 
     return (
         <div>
-            {dailyRecords}
             {summary}
+            {dailyRecords}
         </div>
     );
 }
