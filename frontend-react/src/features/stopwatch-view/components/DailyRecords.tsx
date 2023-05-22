@@ -1,5 +1,5 @@
 import React from "react";
-import { prettyPrintTimestamp } from "../lib/dateParsing"
+import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector } from "react-redux";
 
@@ -18,8 +18,8 @@ export default function DailyRecords() {
         {}
     );
     const dailyRecords = Object.values(stateRecords.records).map((lapRecord) => {
-        var startDatetimeString = prettyPrintTimestamp(lapRecord.startTime);
-        var endDatetimeString = prettyPrintTimestamp(lapRecord.endTime);
+        var startDatetimeString = printTimeComponent(lapRecord.startTime);
+        var endDatetimeString = printTimeComponent(lapRecord.endTime);
         return (
             <p key={lapRecord.lap}>
                 {startDatetimeString} | {endDatetimeString} | {lapRecord.tag}
@@ -29,7 +29,7 @@ export default function DailyRecords() {
 
     const summary = Object.entries(totalTime).map(([tag, totalMs]) => (
         <p key={tag}>
-            {tag} | {prettyPrintTimestamp(totalMs)}
+            {tag} | {printTimeComponent(totalMs, "UTC")}
         </p>
     ));
 

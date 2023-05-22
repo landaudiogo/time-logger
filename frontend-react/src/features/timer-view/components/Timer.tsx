@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useDispatch } from "react-redux";
-import { prettyPrintTimestamp, StopwatchState, useStopwatch } from "features/stopwatch-view"
+import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
 import { tagAdded, addRecord } from "features/stopwatch-view/store";
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
@@ -87,21 +87,36 @@ export default function Timer() {
             <input
                 onChange={onChangeTimer(TimerUnit.Hours)}
                 disabled={disabled}
-                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[0]}
+                value={
+                    printTimeComponent(
+                        timerDuration.getTime(),
+                        "UTC",
+                    ).split(":")[0]
+                }
             />
             :<input
                 onChange={onChangeTimer(TimerUnit.Minutes)}
                 disabled={disabled}
-                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[1]}
+                value={
+                    printTimeComponent(
+                        timerDuration.getTime(),
+                        "UTC"
+                    ).split(":")[1]
+                }
             />
             :<input
                 onChange={onChangeTimer(TimerUnit.Seconds)}
                 disabled={disabled}
-                value={prettyPrintTimestamp(timerDuration.getTime()).split(":")[2]}
+                value={
+                    printTimeComponent(
+                        timerDuration.getTime(),
+                        "UTC"
+                    ).split(":")[2]
+                }
             />
             <br />
             <input onChange={handleTagInput} value={stopwatch.tag} />
-            <p>{prettyPrintTimestamp(timerRemaining.getTime())}</p>
+            <p>{printTimeComponent(timerRemaining.getTime(), "UTC")}</p>
             <button onClick={onStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
         </div>

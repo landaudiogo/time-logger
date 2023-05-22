@@ -5,7 +5,13 @@ export function getStringElapsedTime(elapsedTime: number) {
         .split(".")[0];
 }
 
-export function prettyPrintTimestamp(timestamp: number) {
-    const epoch = Math.ceil(timestamp/1000)*1000;
-    return new Date(epoch).toUTCString().split(" ")[4]; 
+export function printTimeComponent(epoch: number, timezone?: string): string {
+    epoch = Math.ceil(epoch/1000)*1000;
+    const date = new Date(epoch);
+    const options: Intl.DateTimeFormatOptions = {};
+    if (timezone !== undefined) { 
+        options["timeZone"] = timezone;
+    }
+    return date.toLocaleString("en-GB", options)
+        .split(' ')[1];
 }
