@@ -1,12 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
-import { manualRecordAdded } from "../store/recordsSlice";
-import { LapRecord } from "../store/recordsSlice";
-
-
-
+import { LapRecord, modifyRecord, manualRecordAdded } from "../store/recordsSlice";
 
 function ManualRecord() {
     const dispatch = useDispatch();
@@ -94,28 +90,131 @@ function TagSummary(props: TagSummaryProps) {
     );
 }
 
-type DailyRecordProps = {
-    records: {
-        [key: number]: LapRecord
-    }
+type EditDailyRecordProps = {
+    record: LapRecord,
+    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function DailyRecordEntries(props: DailyRecordProps) {
-    const dailyRecords = Object.values(props.records).map((lapRecord) => {
-        var startDatetimeString = printTimeComponent(lapRecord.startTime);
-        var endDatetimeString = printTimeComponent(lapRecord.endTime);
-        return (
+function EditDailyRecord(props: EditDailyRecordProps) {
+    const { setIsEditing, record } = props;
+    const startRef = useRef<HTMLInputElement>(null);
+    const endRef = useRef<HTMLInputElement>(null);
+    const tagRef = useRef<HTMLInputElement>(null);
+    const dispatch = useDispatch();
+
+    function handleDone() { 
+        if (startRef.current === null || endRef.current === null || tagRef.current === null)
+            return;
+        const startTime = startRef.current.value;
+        const startTimeComponents = startTime.split(":").map(numStr => parseInt(numStr));
+        const startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        startDate.setHours(startTimeComponents[0]);
+        startDate.setMinutes(startTimeComponents[1]);
+        startDate.setSeconds(startTimeComponents[2]);
+
+        const endTime = endRef.current.value;
+        if (endTime.match("[0-9]{2}:[0-9]{2}:[0-9]{2}") === null) {
+            console.log("Invalid end time");
+            return;
+        }
+        const endTimeComponents = endTime.split(":").map(numStr => parseInt(numStr));
+        const endDate = new Date();
+        endDate.setHours(0, 0, 0, 0);
+        endDate.setHours(endTimeComponents[0]);
+        endDate.setMinutes(endTimeComponents[1]);
+        endDate.setSeconds(endTimeComponents[2]);
+        dispatch(modifyRecord({
+            ...record, 
+            startTime: startDate.getTime(),
+            endTime: endDate.getTime(),
+            tag: tagRef.current.value,
+        }));
+
+        setIsEditing(false);
+    }
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                alignItems: "center"
+            }}
+        >
+            <input ref={startRef} defaultValue={printTimeComponent(record.startTime)}/>
+            <input ref={endRef} defaultValue={printTimeComponent(record.endTime)}/>
+            <input ref={tagRef} defaultValue={record.tag}/>
+            <button onClick={handleDone}>done</button>
+        </div>
+    );
+}
+
+type DailyRecordProps = {
+    lapRecord: LapRecord
+    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+};
+
+function DailyRecord(props: DailyRecordProps) {
+    const { lapRecord, setIsEditing } = props;
+    var startDatetimeString = printTimeComponent(lapRecord.startTime);
+    var endDatetimeString = printTimeComponent(lapRecord.endTime);
+    return (
+        <div
+            style={{
+                display: "flex",
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center"
+            }}
+        >
             <p key={lapRecord.lap}>
                 {startDatetimeString} | {endDatetimeString} | {lapRecord.tag}
             </p>
+            <div>
+                <button onClick={() => setIsEditing(true)}>edit</button>
+                <button>delete</button>
+            </div>
+        </div>
+    );
+
+}
+
+type DisplayDailyRecordProps = {
+    lapRecord: LapRecord,
+};
+
+function DisplayDailyRecord(props: DisplayDailyRecordProps) {
+    const { lapRecord } = props;
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
+    return (
+        isEditing ?
+            <EditDailyRecord record={lapRecord} setIsEditing={setIsEditing} /> :
+            <DailyRecord lapRecord={lapRecord} setIsEditing={setIsEditing} />
+    );
+}
+
+type DailyRecordsEntriesProps = {
+    records: {
+        [key: number]: LapRecord
+    }
+};
+
+
+function DailyRecordEntries(props: DailyRecordsEntriesProps) {
+    const dailyRecords = Object.values(props.records).map((lapRecord) => {
+        return (
+            <DisplayDailyRecord key={lapRecord.lap} lapRecord={lapRecord} />
         );
-    })
+    });
 
     return (
         <div>
             {dailyRecords}
         </div>
-    )
+    );
 }
 
 export default function DailyRecords() {

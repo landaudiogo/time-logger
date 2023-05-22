@@ -16,7 +16,7 @@ type RecordsType = {
     }
 }
 
-type RecordAddedAction = {
+type RecordType = {
     lap: number,
     startTime: number,
     endTime: number,
@@ -40,7 +40,7 @@ const recordsSlice = createSlice({
     initialState,
     reducers: {
         recordAdded: {
-            reducer(state, action: PayloadAction<RecordAddedAction>) {
+            reducer(state, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
                 state.records[payload.lap] = action.payload;
             },
@@ -60,7 +60,7 @@ const recordsSlice = createSlice({
             },
         },
         manualRecordAdded: {
-            reducer(state, action: PayloadAction<RecordAddedAction>) {
+            reducer(state, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
                 state.records[payload.lap] = action.payload;
             }, 
@@ -74,7 +74,9 @@ const recordsSlice = createSlice({
                 count.value = count.value + 1;
                 return ret;
             }
-
+        },
+        modifyRecord(state, action: PayloadAction<RecordType>) {
+            state.records[action.payload.lap] = action.payload;
         }
     }
 });
@@ -92,5 +94,5 @@ function addRecord() {
 
 export { selectRecords };
 export default recordsSlice.reducer;
-export const { recordAdded, manualRecordAdded } = recordsSlice.actions;
+export const { recordAdded, manualRecordAdded, modifyRecord } = recordsSlice.actions;
 export { addRecord }; 
