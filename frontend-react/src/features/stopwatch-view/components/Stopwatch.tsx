@@ -28,7 +28,7 @@ export default function Stopwatch() {
     }, [stopwatch]);
 
     function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
-        dispatch(tagAdded({tag: e.currentTarget.value}))
+        dispatch(tagAdded({ tag: e.currentTarget.value }))
 
     }
 
@@ -38,7 +38,10 @@ export default function Stopwatch() {
             <button onClick={handleStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
             <br />
-            <input onChange={handleTagInput} value={stopwatch.tag}/>
+            <br />
+            <input onChange={handleTagInput} value={stopwatch.tag} placeholder="tag" />
+            <br />
+            <br />
         </div>
     );
 }

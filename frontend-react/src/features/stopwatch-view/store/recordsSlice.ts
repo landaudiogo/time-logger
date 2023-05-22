@@ -3,7 +3,7 @@ import { RootState } from "store";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
 import { StopwatchType } from "../types";
 
-type LapRecord = {
+export type LapRecord = {
     lap: number,
     tag: string,
     startTime: number,
@@ -21,6 +21,12 @@ type RecordAddedAction = {
     startTime: number,
     endTime: number,
     tag: string,
+}
+
+type ManualRecordType = { 
+    startTime: number, 
+    endTime: number, 
+    tag: string
 }
 
 const count = { value: 0 };
@@ -51,7 +57,24 @@ const recordsSlice = createSlice({
                 };
                 count.value = count.value + 1;
                 return ret;
+            },
+        },
+        manualRecordAdded: {
+            reducer(state, action: PayloadAction<RecordAddedAction>) {
+                const payload = action.payload;
+                state.records[payload.lap] = action.payload;
+            }, 
+            prepare: (manualRecord: ManualRecordType) => {
+                const ret = {
+                    payload: {
+                        ...manualRecord,
+                        lap: count.value
+                    }
+                };
+                count.value = count.value + 1;
+                return ret;
             }
+
         }
     }
 });
@@ -69,5 +92,5 @@ function addRecord() {
 
 export { selectRecords };
 export default recordsSlice.reducer;
-export const { recordAdded } = recordsSlice.actions;
+export const { recordAdded, manualRecordAdded } = recordsSlice.actions;
 export { addRecord }; 

@@ -29,8 +29,10 @@ export default function Timer() {
             a.play();
             terminated.current = true;
         }
-        const remainingTimeDate = new Date(timerDuration.getTime() - elapsedTime);
-        setTimerRemaining(remainingTimeDate)
+        const remainingTimeDate = new Date(
+            Math.max(timerDuration.getTime() - elapsedTime, 0)
+        );
+        setTimerRemaining(remainingTimeDate);
     }, [elapsedTime, timerDuration])
 
     useEffect(() => {
@@ -124,7 +126,9 @@ export default function Timer() {
                 }
             />
             <br />
-            <input onChange={handleTagInput} value={stopwatch.tag} />
+            <br />
+            <input onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
+            <br />
             <p>{printTimeComponent(timerRemaining.getTime(), "UTC")}</p>
             <button onClick={onStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
