@@ -18,10 +18,16 @@ export default function Timer() {
     const [timerDuration, setTimerDuration] = useState<Date>(DefaultTimer);
     const timerDurationRef = useRef<Date>(timerDuration);
     timerDurationRef.current = timerDuration;
+    const terminated = useRef<boolean>(false);
+    const a = new Audio(bell);
 
     useEffect(() => {
+        if (terminated.current === true){
+            return;
+        }
         if (timerDuration.getTime() - elapsedTime < 0) {
-            handleStop();
+            a.play();
+            terminated.current = true;
         }
         const remainingTimeDate = new Date(timerDuration.getTime() - elapsedTime);
         setTimerRemaining(remainingTimeDate)
@@ -30,11 +36,14 @@ export default function Timer() {
     useEffect(() => {
         switch (stopwatch.state) {
             case (StopwatchState.Stopped):
-                const a = new Audio(bell);
-                a.play();
                 if (!stopwatch.startTime || !stopwatch.endTime)
                     throw new Error("stopwatch in inconsistent state")
+                const remainingTimeDate = new Date(timerDuration.getTime() - elapsedTime);
+                setTimerRemaining(remainingTimeDate)
                 dispatch(addRecord());
+                break;
+            case (StopwatchState.Initialized):
+                terminated.current = false;
                 break;
         }
     }, [stopwatch])
