@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
-import { LapRecord, modifyRecord, manualRecordAdded } from "../store/recordsSlice";
+import { LapRecord, modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
 
 function ManualRecord() {
     const dispatch = useDispatch();
@@ -158,8 +158,14 @@ type DailyRecordProps = {
 
 function DailyRecord(props: DailyRecordProps) {
     const { lapRecord, setIsEditing } = props;
-    var startDatetimeString = printTimeComponent(lapRecord.startTime);
-    var endDatetimeString = printTimeComponent(lapRecord.endTime);
+    const dispatch = useDispatch();
+    const startDatetimeString = printTimeComponent(lapRecord.startTime);
+    const endDatetimeString = printTimeComponent(lapRecord.endTime);
+
+    function handleDelete() { 
+        dispatch(deleteRecord({lap: lapRecord.lap}));
+    }
+
     return (
         <div
             style={{
@@ -174,7 +180,7 @@ function DailyRecord(props: DailyRecordProps) {
             </p>
             <div>
                 <button onClick={() => setIsEditing(true)}>edit</button>
-                <button>delete</button>
+                <button onClick={handleDelete}>delete</button>
             </div>
         </div>
     );

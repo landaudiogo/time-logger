@@ -29,6 +29,10 @@ type ManualRecordType = {
     tag: string
 }
 
+type DeleteRecordAction = { 
+    lap: number,
+}
+
 const count = { value: 0 };
 
 const initialState: RecordsType = {
@@ -77,6 +81,9 @@ const recordsSlice = createSlice({
         },
         modifyRecord(state, action: PayloadAction<RecordType>) {
             state.records[action.payload.lap] = action.payload;
+        },
+        deleteRecord(state, action: PayloadAction<DeleteRecordAction>) {
+            delete state.records[action.payload.lap];
         }
     }
 });
@@ -94,5 +101,7 @@ function addRecord() {
 
 export { selectRecords };
 export default recordsSlice.reducer;
-export const { recordAdded, manualRecordAdded, modifyRecord } = recordsSlice.actions;
+export const { 
+    recordAdded, manualRecordAdded, modifyRecord, deleteRecord
+} = recordsSlice.actions;
 export { addRecord }; 
