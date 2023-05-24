@@ -3,6 +3,7 @@ import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { LapRecord, modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
+import "./styles.css";
 
 function ManualRecord() {
     const dispatch = useDispatch();
@@ -50,8 +51,8 @@ function ManualRecord() {
 
     return (
         <div>
-            <input ref={startTimeRef} placeholder="start" />
-            <input ref={endTimeRef} placeholder="end" />
+            <input ref={startTimeRef} placeholder="start" className="time-input"/>
+            <input ref={endTimeRef} placeholder="end" className="time-input"/>
             <input ref={tagRef} placeholder="tag" />
             <button onClick={handleClick}>add</button>
         </div>
@@ -143,8 +144,8 @@ function EditDailyRecord(props: EditDailyRecordProps) {
                 alignItems: "center"
             }}
         >
-            <input ref={startRef} defaultValue={printTimeComponent(record.startTime)}/>
-            <input ref={endRef} defaultValue={printTimeComponent(record.endTime)}/>
+            <input ref={startRef} defaultValue={printTimeComponent(record.startTime)} className="time-input"/>
+            <input ref={endRef} defaultValue={printTimeComponent(record.endTime)} className="time-input"/>
             <input ref={tagRef} defaultValue={record.tag}/>
             <button onClick={handleDone}>done</button>
         </div>
@@ -167,21 +168,12 @@ function DailyRecord(props: DailyRecordProps) {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center"
-            }}
-        >
-            <p key={lapRecord.lap}>
+        <div>
+            <p key={lapRecord.lap} style={{display: "inline"}}>
                 {startDatetimeString} | {endDatetimeString} | {lapRecord.tag}
             </p>
-            <div>
-                <button onClick={() => setIsEditing(true)}>edit</button>
-                <button onClick={handleDelete}>delete</button>
-            </div>
+            <button onClick={() => setIsEditing(true)}>edit</button>
+            <button onClick={handleDelete}>delete</button>
         </div>
     );
 

@@ -6,6 +6,7 @@ import { getStringElapsedTime } from "../lib/dateParsing"
 import { AppDispatch } from "store";
 import { addRecord } from "../store/recordsSlice";
 import { tagAdded } from "../store/stopwatchSlice";
+import "./styles.css";
 
 
 export default function Stopwatch() {
@@ -33,15 +34,13 @@ export default function Stopwatch() {
     }
 
     return (
-        <div>
+        <div className="stopwatch-container">
             <h1>{getStringElapsedTime(elapsedTime)}</h1>
-            <button onClick={handleStart}>Start</button>
-            <button onClick={handleStop}>Stop</button>
-            <br />
-            <br />
-            <input onChange={handleTagInput} value={stopwatch.tag} placeholder="tag" />
-            <br />
-            <br />
+            <div className="stopwatch-button-container">
+                <button className="stopwatch-button-start" onClick={handleStart}>start</button>
+                <button className="stopwatch-button-stop" onClick={handleStop}>stop</button>
+            </div>
+            <input className="stopwatch-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag" />
         </div>
     );
 }

@@ -1,0 +1,37 @@
+.stopwatch-page {
+    width: 600px;
+    margin: 0 auto;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-input {
+    width: 10ch;
+}
+
+.stopwatch-container { 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stopwatch-button-container { 
+    display: flex; 
+    flex-direction: row;
+}
+
+.stopwatch-button-start, 
+.stopwatch-button-stop {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 2px 2px;
+    display: block;
+}
+
+.stopwatch-input-tag {
+    display: block;
+    width: 20ch;
+}
