@@ -4,6 +4,7 @@ import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopw
 import { tagAdded, addRecord } from "features/stopwatch-view/store";
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
+import "./styles.css"
 
 enum TimerUnit {
     Hours, Minutes, Seconds
@@ -94,44 +95,48 @@ export default function Timer() {
 
     const disabled = stopwatch.state === StopwatchState.Started;
     return (
-        <div>
-            <input
-                onChange={onChangeTimer(TimerUnit.Hours)}
-                disabled={disabled}
-                value={
-                    printTimeComponent(
-                        timerDuration.getTime(),
-                        "UTC",
-                    ).split(":")[0]
-                }
-            />
-            :<input
-                onChange={onChangeTimer(TimerUnit.Minutes)}
-                disabled={disabled}
-                value={
-                    printTimeComponent(
-                        timerDuration.getTime(),
-                        "UTC"
-                    ).split(":")[1]
-                }
-            />
-            :<input
-                onChange={onChangeTimer(TimerUnit.Seconds)}
-                disabled={disabled}
-                value={
-                    printTimeComponent(
-                        timerDuration.getTime(),
-                        "UTC"
-                    ).split(":")[2]
-                }
-            />
-            <br />
-            <br />
-            <input onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
-            <br />
-            <p>{printTimeComponent(timerRemaining.getTime(), "UTC")}</p>
-            <button onClick={onStart}>Start</button>
-            <button onClick={handleStop}>Stop</button>
+        <div className="timer-container">
+            <div>
+                <input
+                    className="timer-input-time-component"
+                    onChange={onChangeTimer(TimerUnit.Hours)}
+                    disabled={disabled}
+                    value={
+                        printTimeComponent(
+                            timerDuration.getTime(),
+                            "UTC",
+                        ).split(":")[0]
+                    }
+                />
+                :<input
+                    className="timer-input-time-component"
+                    onChange={onChangeTimer(TimerUnit.Minutes)}
+                    disabled={disabled}
+                    value={
+                        printTimeComponent(
+                            timerDuration.getTime(),
+                            "UTC"
+                        ).split(":")[1]
+                    }
+                />
+                :<input
+                    className="timer-input-time-component"
+                    onChange={onChangeTimer(TimerUnit.Seconds)}
+                    disabled={disabled}
+                    value={
+                        printTimeComponent(
+                            timerDuration.getTime(),
+                            "UTC"
+                        ).split(":")[2]
+                    }
+                />
+            </div>
+            <h1>{printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
+            <div className="timer-button-container">
+                <button className="timer-button-start" onClick={onStart}>start</button>
+                <button className="timer-button-stop" onClick={handleStop}>stop</button>
+            </div>
+            <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
         </div>
     );
 }

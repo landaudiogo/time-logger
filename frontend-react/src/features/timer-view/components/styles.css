@@ -1,0 +1,39 @@
+.timer-page { 
+    width: 600px;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.timer-container {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+}
+
+.timer-h1 { 
+    display: inline-block;
+}
+
+.timer-input-time-component { 
+    width: 3ch;
+}
+
+.timer-button-container { 
+    display: flex; 
+    flex-direction: row;
+}
+
+.timer-button-start, 
+.timer-button-stop {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 2px 2px;
+    display: block;
+}
+
+.timer-input-tag {
+    width: 20ch;
+}
