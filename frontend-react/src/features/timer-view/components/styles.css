@@ -13,6 +13,10 @@
     flex-direction: column; 
     align-items: center;
     justify-content: space-between;
+    background-color: var(--neutral-7);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;;
 }
 
 .timer-h1 { 
@@ -24,6 +28,10 @@
     text-align: center;
     font-size: 1.2em;
     margin: 0 2px;
+    background-color: var(--neutral-6)
+}
+.timer-input-time-component:focus { 
+    background-color: var(--neutral-5);
 }
 
 .timer-text-colon { 
@@ -73,4 +81,8 @@
 
 .timer-input-tag {
     width: 20ch;
+    background-color: var(--neutral-6);
+}
+.timer-input-tag:focus {
+    background-color: var(--neutral-5);
 }
