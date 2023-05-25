@@ -6,6 +6,10 @@
     align-items: center;
 }
 
+.stopwatch-header { 
+    margin-top: 16px;
+}
+
 .daily-record-time-input {
     width: 10ch;
     text-align: center;

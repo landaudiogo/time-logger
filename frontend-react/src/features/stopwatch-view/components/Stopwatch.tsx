@@ -35,7 +35,7 @@ export default function Stopwatch() {
 
     return (
         <div className="stopwatch-container">
-            <h1>{getStringElapsedTime(elapsedTime)}</h1>
+            <h1 className="stopwatch-header">{getStringElapsedTime(elapsedTime)}</h1>
             <div>
                 <div className="stopwatch-button-container">
                     <button className="stopwatch-button-start" onClick={handleStart}>start</button>
