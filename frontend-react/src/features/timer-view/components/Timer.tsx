@@ -96,7 +96,7 @@ export default function Timer() {
     const disabled = stopwatch.state === StopwatchState.Started;
     return (
         <div className="timer-container">
-            <div>
+            <div className="timer-container-duration">
                 <input
                     className="timer-input-time-component"
                     onChange={onChangeTimer(TimerUnit.Hours)}
@@ -134,12 +134,14 @@ export default function Timer() {
                 />
             </div>
             <h1>{printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
-            <div>
+            <div className="timer-buttons-tag-container">
                 <div className="timer-button-container">
                     <button className="timer-button-start" onClick={onStart}>start</button>
                     <button className="timer-button-stop" onClick={handleStop}>stop</button>
                 </div>
-                <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
+                <div>
+                    <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
+                </div>
             </div>
         </div>
     );

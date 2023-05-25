@@ -1,5 +1,5 @@
 .timer-page { 
-    width: 600px;
+    max-width: 600px;
     display: flex; 
     flex-direction: column;
     align-items: center;
@@ -7,8 +7,9 @@
 }
 
 .timer-container {
-    margin: 16px 0px;
+    --content-width: 170px;
     height: 250px;
+    margin: 16px 0px;
     display: flex; 
     flex-direction: column; 
     align-items: center;
@@ -19,6 +20,12 @@
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;;
 }
 
+.timer-container-duration {
+    display: flex;
+    justify-content: space-between;
+    width: var(--content-width);
+}
+
 .timer-h1 { 
     display: inline-block;
 }
@@ -27,7 +34,6 @@
     width: 50px;
     text-align: center;
     font-size: 1.2em;
-    margin: 0 2px;
     background-color: var(--neutral-6)
 }
 .timer-input-time-component:focus { 
@@ -40,10 +46,16 @@
     align-items: center;
 }
 
+.timer-buttons-tag-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .timer-button-container { 
     display: flex; 
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .timer-button-start, 
@@ -52,7 +64,6 @@
     border-width: 1px;
     width: 50px;
     height: 50px;
-    margin: 4px 2px;
     display: block;
 }
 .timer-button-start {
@@ -80,7 +91,7 @@
 }
 
 .timer-input-tag {
-    width: 20ch;
+    width: var(--content-width);
     background-color: var(--neutral-6);
 }
 .timer-input-tag:focus {

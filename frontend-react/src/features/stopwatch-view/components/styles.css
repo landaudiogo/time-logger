@@ -16,6 +16,7 @@
 }
 
 .stopwatch-container { 
+    --content-width: 145px;
     margin-top: 32px;
     margin-bottom: 16px;
     height: 200px;
@@ -31,7 +32,8 @@
 
 .stopwatch-button-container { 
     display: flex; 
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .stopwatch-button-start, 
@@ -40,7 +42,6 @@
     border-width: 1px;
     width: 50px;
     height: 50px;
-    margin: 4px 2px;
     display: block;
 }
 .stopwatch-button-start {
@@ -68,7 +69,7 @@
 }
 
 .stopwatch-input-tag {
-    width: 20ch;
+    width: var(--content-width);
     background-color: var(--neutral-6);
 }
 .stopwatch-input-tag:focus {
