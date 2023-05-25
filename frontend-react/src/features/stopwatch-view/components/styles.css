@@ -65,4 +65,8 @@
 
 .stopwatch-input-tag {
     width: 20ch;
+    background-color: var(--neutral-6);
+}
+.stopwatch-input-tag:focus {
+    background-color: var(--neutral-5);
 }
