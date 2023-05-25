@@ -108,7 +108,8 @@ export default function Timer() {
                         ).split(":")[0]
                     }
                 />
-                :<input
+                <span className="timer-text-colon">:</span>
+                <input
                     className="timer-input-time-component"
                     onChange={onChangeTimer(TimerUnit.Minutes)}
                     disabled={disabled}
@@ -119,7 +120,8 @@ export default function Timer() {
                         ).split(":")[1]
                     }
                 />
-                :<input
+                <span className="timer-text-colon">:</span>
+                <input
                     className="timer-input-time-component"
                     onChange={onChangeTimer(TimerUnit.Seconds)}
                     disabled={disabled}
@@ -132,11 +134,13 @@ export default function Timer() {
                 />
             </div>
             <h1>{printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
-            <div className="timer-button-container">
-                <button className="timer-button-start" onClick={onStart}>start</button>
-                <button className="timer-button-stop" onClick={handleStop}>stop</button>
+            <div>
+                <div className="timer-button-container">
+                    <button className="timer-button-start" onClick={onStart}>start</button>
+                    <button className="timer-button-stop" onClick={handleStop}>stop</button>
+                </div>
+                <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
             </div>
-            <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
         </div>
     );
 }
