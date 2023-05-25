@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -10,9 +12,80 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --neutral-1: hsl(214, 22%, 16%);
+    --neutral-2: hsl(213, 12%, 42%); 
+    --neutral-3: hsl(214, 14%, 59%); 
+    --neutral-4: hsl(207, 18%, 76%); 
+    --neutral-5: hsl(212, 18%, 84%); 
+    --neutral-6: hsl(207, 22%, 90%); 
+    --neutral-7: hsl(210, 16%, 97%); 
+
+    --primary-1: hsl(206, 44%, 22%);
+    --primary-2: hsl(207, 62%, 27%);
+    --primary-3: hsl(207, 64%, 38%);
+    --primary-4: hsl(207, 60%, 48%);
+    --primary-5: hsl(207, 60%, 61%);
+    --primary-6: hsl(206, 78%, 81%);
+    --primary-7: hsl(206, 100%, 96%);
+
+    --accent-green-1: hsl(155, 59%, 20%);
+    --accent-green-2: hsl(145, 65%, 28%);
+    --accent-green-3: hsl(145, 61%, 38%);
+    --accent-green-4: hsl(145, 55%, 48%);
+    --accent-green-5: hsl(145, 57%, 65%);
+    --accent-green-6: hsl(141, 67%, 79%);
+    --accent-green-7: hsl(141, 80%, 93%);
+
+    --accent-red-1: hsl(0, 60%, 23%);
+    --accent-red-2: hsl(0, 67%, 31%);
+    --accent-red-3: hsl(0, 70%, 42%);
+    --accent-red-4: hsl(0, 71%, 52%);
+    --accent-red-5: hsl(0, 70%, 64%);
+    --accent-red-6: hsl(0, 78%, 81%);
+    --accent-red-7: hsl(0, 76%, 94%);
+
+    --accent-yellow-1: hsl(43, 65%, 21%);
+    --accent-yellow-2: hsl(42, 63%, 33%);
+    --accent-yellow-3: hsl(44, 57%, 51%);
+    --accent-yellow-4: hsl(42, 86%, 67%);
+    --accent-yellow-5: hsl(44, 90%, 80%);
+    --accent-yellow-6: hsl(44, 90%, 91%);
+    --accent-yellow-7: hsl(43, 100%, 97%);
+
+    --border-radius: 5px;
+
+    background-color: var(--neutral-6);
+
+    font-size: 18px;
+    color: var(--primary-1);
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
+input {
+    border-radius: var(--border-radius);
+    background-color: var(--neutral-5);
+    border-color: var(--neutral-1);
+    border-width: 0px;
+    padding: 0.5em;
+    box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.1);
+}
+input:focus {
+    outline: none;
+    background-color: var(--neutral-4);
+}
+
+button { 
+    background-color: var(--primary-3);
+    color: var(--primary-7);
+    border-style: solid;
+    border-width: 0px;
+    border-radius: var(--border-radius);
+    padding: 0.5em;
+    box-shadow: 0 4px 6px hsla(0, 0%, 0.2);
+}
+button:hover { 
+    background-color: var(--primary-4);
+}
+button:active { 
+    background-color: var(--primary-3);
 }
