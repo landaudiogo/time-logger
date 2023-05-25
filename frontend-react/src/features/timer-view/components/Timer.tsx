@@ -10,7 +10,7 @@ enum TimerUnit {
     Hours, Minutes, Seconds
 }
 
-const DefaultTimer: Date = new Date(0);
+const DefaultTimer: Date = new Date(1000*60*25);
 
 export default function Timer() {
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
