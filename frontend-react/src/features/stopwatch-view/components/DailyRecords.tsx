@@ -51,8 +51,8 @@ function ManualRecord() {
 
     return (
         <div>
-            <input ref={startTimeRef} placeholder="start" className="time-input"/>
-            <input ref={endTimeRef} placeholder="end" className="time-input"/>
+            <input ref={startTimeRef} placeholder="start" className="daily-record-time-input"/>
+            <input ref={endTimeRef} placeholder="end" className="daily-record-time-input"/>
             <input ref={tagRef} placeholder="tag" />
             <button onClick={handleClick}>add</button>
         </div>
