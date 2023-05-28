@@ -84,6 +84,7 @@ button {
 }
 button:hover { 
     background-color: var(--primary-4);
+    cursor: pointer;
 }
 button:active { 
     background-color: var(--primary-3);

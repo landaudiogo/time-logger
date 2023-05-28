@@ -8,7 +8,6 @@ import "./styles.css";
 export default function StopwatchView() {
     return (
         <div className="stopwatch-page">
-            <Link to="/timer">timer</Link>
             <Stopwatch />
             <DailyRecords />
         </div>

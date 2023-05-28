@@ -107,6 +107,8 @@
 
 .timer-input-tag {
     width: var(--content-width);
+    font-size: 16px;
+    height: 32px;
     background-color: var(--neutral-6);
 }
 .timer-input-tag:focus {

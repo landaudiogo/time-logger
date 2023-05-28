@@ -1,0 +1,92 @@
+.header-container {
+    width: 40%;
+    margin: 16px auto;
+    position: relative;
+}
+
+.header-title-container {
+    display: flex;
+    justify-content: center;
+}
+
+.active-title {
+    position: relative;
+    z-index: 1;
+}
+.active-title:hover {
+    cursor: pointer;
+}
+
+.options-indicator { 
+    position: absolute;
+    right: -30px; 
+    top: 8px;
+    font-size: 24px;
+}
+
+.element-cover-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    z-index: 2;
+    visibility: hidden;
+    transition: visibility 0s, opacity 0.2s linear;
+}
+.element-cover-page-active {
+    visibility: visible;
+    opacity: 60%;
+}
+
+
+.page-options {
+    background-color: var(--neutral-7);
+    top: 0px;
+    margin: 0 auto;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    border-radius: var(--border-radius);
+
+    visibility: hidden;
+    animation: 0s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  50% {
+    visibility: hidden;
+    opacity: 0.5;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+.page-option {
+    text-decoration: none;
+    color: var(--primary-1)
+}
+.page-option:visited {
+    color: var(--primary-1);
+}
+.page-option:active {
+    color: var(--primary-1);
+}
+.page-option:hover {
+    cursor: pointer;
+}
+
+.page-option-first {
+    margin-top: 12px;
+}
+.page-option-last {
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+.page-option-text {
+    text-align: center;
+}

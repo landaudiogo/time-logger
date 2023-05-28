@@ -7,7 +7,6 @@ import "./styles.css"
 export default function TimerView() {
     return (
         <div className="timer-page">
-            <Link to="/stopwatch">stopwatch</Link>
             <Timer />
             <DailyRecords />
         </div>

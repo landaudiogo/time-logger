@@ -77,7 +77,7 @@
 
 .stopwatch-container { 
     --content-width: 170px;
-    margin-top: 32px;
+    margin-top: 16px;
     margin-bottom: 16px;
     height: 200px;
     display: flex; 
@@ -144,6 +144,8 @@
 .stopwatch-input-tag {
     width: var(--content-width);
     background-color: var(--neutral-6);
+    font-size: 16px;
+    height: 32px;
 }
 .stopwatch-input-tag:focus {
     background-color: var(--neutral-5);
