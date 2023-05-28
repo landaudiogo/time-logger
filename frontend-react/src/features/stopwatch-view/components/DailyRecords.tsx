@@ -311,9 +311,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
     }
 
     return (
-        <TableRow 
-            key={lapRecord.tag+lapRecord.startTime.toString()} 
-        >
+        <TableRow>
             <TableCell 
                 align="left" 
                 onClick={handleDelete}
@@ -333,6 +331,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                     />:
                     <p
                         onClick={() => setEditingTag((curr) => !curr)}
+                        className="dr-cell-display-tag"
                     >
                         {lapRecord.tag}
                     </p>
@@ -394,8 +393,11 @@ function tagRecordsRows(tagEntries: Array<LapRecord>) {
 
     const entries = tagEntries.map((lapRecord, index) => 
         (index !== 0) ? 
-            <TagRecordEntry lapRecord={lapRecord} />: 
             <TagRecordEntry 
+                key={lapRecord.tag+lapRecord.startTime.toString()} 
+                lapRecord={lapRecord} />: 
+            <TagRecordEntry 
+                key={lapRecord.tag+lapRecord.startTime.toString()} 
                 lapRecord={lapRecord} 
                 firstRecordData={{ totalTime, rowSpan: tagEntries.length }}
             />
@@ -418,8 +420,6 @@ export default function DailyRecords() {
         }
         tagRecords[lapRecord.tag].push(lapRecord)
     }
-    console.log(tagRecords);
-    console.log(stateRecords);
 
     return (
         <div>

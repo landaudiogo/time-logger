@@ -50,7 +50,16 @@
 }
 
 .dr-cell-tag-editing {
-    width: 130px;
+    max-width: 130px;
+}
+
+.dr-cell-display-tag {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    min-width: 40px;
+    min-height: 20px;
+    max-width: 30ch;
 }
 
 .dr-cell-time-editing {
