@@ -221,6 +221,63 @@ function DailyRecordEntries(props: DailyRecordsEntriesProps) {
     );
 }
 
+type tagRecordEntryProps = {
+    lapRecord: LapRecord,
+    firstRecordData?: {
+        totalTime: number, 
+        rowSpan: number
+    }
+}
+function TagRecordEntry(props: tagRecordEntryProps) {
+    const dispatch = useDispatch();
+    const { 
+        lapRecord, 
+        firstRecordData
+    } = props;
+
+
+    function handleDelete() {
+        dispatch(deleteRecord({ lap: lapRecord.lap }));
+    }
+
+    return (
+        <TableRow 
+            key={lapRecord.tag+lapRecord.startTime.toString()} 
+        >
+            <TableCell 
+                align="left" 
+                onClick={handleDelete}
+            >
+                {/* <button className="dr-table-button">&#128393;</button> */}
+                <button className="dr-table-button dr-table-button-accent-red">&#128465;</button>
+            </TableCell>
+            <TableCell 
+                align="center"
+            >
+                {lapRecord.tag}
+            </TableCell>
+            <TableCell 
+                align="right"
+            >
+                {printTimeComponent(lapRecord.startTime)}
+            </TableCell>
+            <TableCell 
+                align="right"
+            >
+                {printTimeComponent(lapRecord.endTime)}
+            </TableCell>
+            {(firstRecordData !== undefined) &&
+                <TableCell 
+                    align="right" 
+                    rowSpan={firstRecordData.rowSpan}
+                >
+                    <strong>{printTimeComponent(firstRecordData.totalTime, "UTC")}</strong>
+                </TableCell>
+            }
+        </TableRow>
+    )
+}
+
 function tagRecordsRows(tagEntries: Array<LapRecord>) {
     const totalTime = tagEntries.reduce(
         (acc, curr) => acc + (curr.endTime - curr.startTime),
@@ -228,29 +285,12 @@ function tagRecordsRows(tagEntries: Array<LapRecord>) {
     );
 
     const entries = tagEntries.map((lapRecord, index) => 
-        <TableRow key={lapRecord.tag+lapRecord.startTime.toString()}>
-            <TableCell align="left">
-                {/* <button className="dr-table-button">&#128393;</button> */}
-                <button className="dr-table-button dr-table-button-accent-red">&#128465;</button>
-            </TableCell>
-            <TableCell align="center">
-                {lapRecord.tag}
-            </TableCell>
-            <TableCell align="right">
-                {printTimeComponent(lapRecord.startTime)}
-            </TableCell>
-            <TableCell align="right">
-                {printTimeComponent(lapRecord.endTime)}
-            </TableCell>
-            {index === 0 && 
-                <TableCell 
-                    align="right" 
-                    rowSpan={tagEntries.length}
-                >
-                    <strong>{printTimeComponent(totalTime, "UTC")}</strong>
-                </TableCell>
-            }
-        </TableRow>
+        (index !== 0) ? 
+            <TagRecordEntry lapRecord={lapRecord} />: 
+            <TagRecordEntry 
+                lapRecord={lapRecord} 
+                firstRecordData={{ totalTime, rowSpan: tagEntries.length }}
+            />
     );
 
     return entries;
