@@ -7,9 +7,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
+    font-family: "Roboto","Helvetica","Arial", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -27,6 +25,7 @@ body {
     --primary-4: hsl(207, 60%, 48%);
     --primary-5: hsl(207, 60%, 61%);
     --primary-6: hsl(206, 78%, 81%);
+    --primary-6-5: hsl(206, 78%, 90%);
     --primary-7: hsl(206, 100%, 96%);
 
     --accent-green-1: hsl(155, 59%, 20%);
@@ -43,6 +42,7 @@ body {
     --accent-red-4: hsl(0, 71%, 52%);
     --accent-red-5: hsl(0, 70%, 64%);
     --accent-red-6: hsl(0, 78%, 81%);
+    --accent-red-6-5: hsl(0, 78%, 94%);
     --accent-red-7: hsl(0, 76%, 94%);
 
     --accent-yellow-1: hsl(43, 65%, 21%);
@@ -81,7 +81,6 @@ button {
     border-width: 0px;
     border-radius: var(--border-radius);
     padding: 0.5em;
-    box-shadow: 0 4px 6px hsla(0, 0%, 0.2);
 }
 button:hover { 
     background-color: var(--primary-4);

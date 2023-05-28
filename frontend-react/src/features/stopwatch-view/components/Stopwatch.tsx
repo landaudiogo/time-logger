@@ -38,8 +38,8 @@ export default function Stopwatch() {
             <h1 className="stopwatch-header">{getStringElapsedTime(elapsedTime)}</h1>
             <div>
                 <div className="stopwatch-button-container">
-                    <button className="stopwatch-button-start" onClick={handleStart}>start</button>
-                    <button className="stopwatch-button-stop" onClick={handleStop}>stop</button>
+                    <button className="stopwatch-button stopwatch-button-start" onClick={handleStart}>start</button>
+                    <button className="stopwatch-button stopwatch-button-stop" onClick={handleStop}>stop</button>
                 </div>
             <input className="stopwatch-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag" />
             </div>

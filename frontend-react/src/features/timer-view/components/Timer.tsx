@@ -136,8 +136,8 @@ export default function Timer() {
             <h1>{printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
             <div className="timer-buttons-tag-container">
                 <div className="timer-button-container">
-                    <button className="timer-button-start" onClick={onStart}>start</button>
-                    <button className="timer-button-stop" onClick={handleStop}>stop</button>
+                    <button className="timer-button timer-button-start" onClick={onStart}>start</button>
+                    <button className="timer-button timer-button-stop" onClick={handleStop}>stop</button>
                 </div>
                 <div>
                     <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
