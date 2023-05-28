@@ -200,11 +200,13 @@ export default function DailyRecords() {
     const dispatch = useDispatch();
 
     const tagRecords: TagRecords = {};
+    var totalTime = 0;
     for (const lapRecord of Object.values(stateRecords.records)) {
         if (tagRecords[lapRecord.tag] === undefined) {
             tagRecords[lapRecord.tag] = [];
         }
         tagRecords[lapRecord.tag].push(lapRecord)
+        totalTime = totalTime + lapRecord.endTime - lapRecord.startTime;
     }
 
     function handleAdd() {
@@ -237,6 +239,14 @@ export default function DailyRecords() {
                     </TableHead>
                     <TableBody>
                         {Object.keys(tagRecords).map((key) => tagRecordsRows(tagRecords[key]))}
+                        <TableRow>
+                            <TableCell colSpan={4} align="right">
+                                <strong>Total Time:</strong>
+                            </TableCell>
+                            <TableCell align="right">
+                                <strong>{printTimeComponent(totalTime, "UTC")}</strong>
+                            </TableCell>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
