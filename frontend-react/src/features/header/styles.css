@@ -38,12 +38,12 @@
 }
 .element-cover-page-active {
     visibility: visible;
-    opacity: 60%;
+    opacity: 40%;
 }
 
 
 .page-options {
-    background-color: var(--neutral-7);
+    background-color: var(--neutral-6);
     top: 0px;
     margin: 0 auto;
     position: absolute;
