@@ -42,6 +42,21 @@
     background-color: var(--neutral-7);
 }
 
+.dr-cell-editing {
+    background-color: var(--neutral-7);
+}
+.dr-cell-editing:focus {
+    background-color: var(--neutral-6);
+}
+
+.dr-cell-tag-editing {
+    width: 130px;
+}
+
+.dr-cell-time-editing {
+    width: 9ch;
+}
+
 .stopwatch-header { 
     margin-top: 16px;
 }

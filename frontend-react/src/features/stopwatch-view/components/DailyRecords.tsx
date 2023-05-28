@@ -221,6 +221,12 @@ function DailyRecordEntries(props: DailyRecordsEntriesProps) {
     );
 }
 
+enum ModifiableLapRecordMembers {
+    tag = "tag",
+    startTime = "startTime",
+    endTime = "endTime",
+}
+
 type tagRecordEntryProps = {
     lapRecord: LapRecord,
     firstRecordData?: {
@@ -228,13 +234,77 @@ type tagRecordEntryProps = {
         rowSpan: number
     }
 }
+
+function validateTimeInput(timeString: string) {
+    if (timeString.match("[0-9]{2}:[0-9]{2}:[0-9]{2}") === null) {
+        console.log("Invalid time string");
+        return false;
+    }
+    return true;
+}
+
 function TagRecordEntry(props: tagRecordEntryProps) {
     const dispatch = useDispatch();
+    const [editingTag, setEditingTag] = useState<boolean>(false);
+    const [editingStartTime, setEditingStartTime] = useState<boolean>(false);
+    const [editingEndTime, setEditingEndTime] = useState<boolean>(false);
     const { 
         lapRecord, 
         firstRecordData
     } = props;
 
+    function tagHandleKeyDown(e: React.KeyboardEvent) {
+        if (e.key !== "Enter") 
+            return;
+        const newRecord = {...lapRecord};
+        const target = e.target as HTMLInputElement;
+        newRecord.tag = target.value;
+        dispatch(modifyRecord(newRecord));
+        setEditingTag((curr) => !curr);
+    }
+
+    function startHandleKeyDown(e: React.KeyboardEvent) {
+        if (e.key !== "Enter") 
+            return;
+        const newRecord = {...lapRecord};
+        const target = e.target as HTMLInputElement;
+        const value = target.value; 
+        if (!validateTimeInput(value)) { 
+            return
+        }
+        const timeComponents = value.split(":").map(numStr => parseInt(numStr));
+        const date = new Date(lapRecord.startTime);
+        date.setHours(0, 0, 0, 0);
+        date.setHours(timeComponents[0]);
+        date.setMinutes(timeComponents[1]);
+        date.setSeconds(timeComponents[2]);
+        newRecord.startTime = date.getTime();
+        if (newRecord.startTime > newRecord.endTime) { 
+            return;
+        }
+        dispatch(modifyRecord(newRecord));
+        setEditingStartTime((curr) => !curr);
+    }
+
+    function endHandleKeyDown(e: React.KeyboardEvent) {
+        if (e.key !== "Enter") 
+            return;
+        const newRecord = {...lapRecord};
+        const target = e.target as HTMLInputElement;
+        const value = target.value; 
+        if (!validateTimeInput(value)) { 
+            return
+        }
+        const timeComponents = value.split(":").map(numStr => parseInt(numStr));
+        const date = new Date(lapRecord.startTime);
+        date.setHours(0, 0, 0, 0);
+        date.setHours(timeComponents[0]);
+        date.setMinutes(timeComponents[1]);
+        date.setSeconds(timeComponents[2]);
+        newRecord.endTime = date.getTime();
+        dispatch(modifyRecord(newRecord));
+        setEditingEndTime((curr) => !curr);
+    }
 
     function handleDelete() {
         dispatch(deleteRecord({ lap: lapRecord.lap }));
@@ -248,23 +318,61 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                 align="left" 
                 onClick={handleDelete}
             >
-                {/* <button className="dr-table-button">&#128393;</button> */}
                 <button className="dr-table-button dr-table-button-accent-red">&#128465;</button>
             </TableCell>
             <TableCell 
                 align="center"
             >
-                {lapRecord.tag}
+                {editingTag ? 
+                    <input 
+                        className="dr-cell-editing dr-cell-tag-editing"
+                        onKeyDown={tagHandleKeyDown}
+                        defaultValue={lapRecord.tag}
+                        onBlur={() => setEditingTag((curr) => !curr)}
+                        autoFocus
+                    />:
+                    <p
+                        onClick={() => setEditingTag((curr) => !curr)}
+                    >
+                        {lapRecord.tag}
+                    </p>
+                }
             </TableCell>
             <TableCell 
                 align="right"
             >
-                {printTimeComponent(lapRecord.startTime)}
+                {editingStartTime ? 
+                    <input 
+                        className="dr-cell-editing dr-cell-time-editing"
+                        onKeyDown={startHandleKeyDown}
+                        defaultValue={printTimeComponent(lapRecord.startTime)}
+                        onBlur={() => setEditingStartTime((curr) => !curr)}
+                        autoFocus
+                    />:
+                    <p
+                        onClick={() => setEditingStartTime((curr) => !curr)}
+                    >
+                        {printTimeComponent(lapRecord.startTime)}
+                    </p>
+                }
             </TableCell>
             <TableCell 
                 align="right"
             >
-                {printTimeComponent(lapRecord.endTime)}
+                {editingEndTime ? 
+                    <input 
+                        className="dr-cell-editing dr-cell-time-editing"
+                        onKeyDown={endHandleKeyDown}
+                        defaultValue={printTimeComponent(lapRecord.endTime)}
+                        onBlur={() => setEditingEndTime((curr) => !curr)}
+                        autoFocus
+                    />:
+                    <p
+                        onClick={() => setEditingEndTime((curr) => !curr)}
+                    >
+                        {printTimeComponent(lapRecord.endTime)}
+                    </p>
+                }
             </TableCell>
             {(firstRecordData !== undefined) &&
                 <TableCell 
