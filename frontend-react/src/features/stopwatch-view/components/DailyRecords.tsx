@@ -3,6 +3,13 @@ import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { LapRecord, modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import "./styles.css";
 
 function ManualRecord() {
@@ -51,8 +58,8 @@ function ManualRecord() {
 
     return (
         <div>
-            <input ref={startTimeRef} placeholder="start" className="daily-record-time-input"/>
-            <input ref={endTimeRef} placeholder="end" className="daily-record-time-input"/>
+            <input ref={startTimeRef} placeholder="start" className="daily-record-time-input" />
+            <input ref={endTimeRef} placeholder="end" className="daily-record-time-input" />
             <input ref={tagRef} placeholder="tag" />
             <button onClick={handleClick}>add</button>
         </div>
@@ -103,7 +110,7 @@ function EditDailyRecord(props: EditDailyRecordProps) {
     const tagRef = useRef<HTMLInputElement>(null);
     const dispatch = useDispatch();
 
-    function handleDone() { 
+    function handleDone() {
         if (startRef.current === null || endRef.current === null || tagRef.current === null)
             return;
         const startTime = startRef.current.value;
@@ -126,7 +133,7 @@ function EditDailyRecord(props: EditDailyRecordProps) {
         endDate.setMinutes(endTimeComponents[1]);
         endDate.setSeconds(endTimeComponents[2]);
         dispatch(modifyRecord({
-            ...record, 
+            ...record,
             startTime: startDate.getTime(),
             endTime: endDate.getTime(),
             tag: tagRef.current.value,
@@ -144,9 +151,9 @@ function EditDailyRecord(props: EditDailyRecordProps) {
                 alignItems: "center"
             }}
         >
-            <input ref={startRef} defaultValue={printTimeComponent(record.startTime)} className="time-input"/>
-            <input ref={endRef} defaultValue={printTimeComponent(record.endTime)} className="time-input"/>
-            <input ref={tagRef} defaultValue={record.tag}/>
+            <input ref={startRef} defaultValue={printTimeComponent(record.startTime)} className="time-input" />
+            <input ref={endRef} defaultValue={printTimeComponent(record.endTime)} className="time-input" />
+            <input ref={tagRef} defaultValue={record.tag} />
             <button onClick={handleDone}>done</button>
         </div>
     );
@@ -163,13 +170,13 @@ function DailyRecord(props: DailyRecordProps) {
     const startDatetimeString = printTimeComponent(lapRecord.startTime);
     const endDatetimeString = printTimeComponent(lapRecord.endTime);
 
-    function handleDelete() { 
-        dispatch(deleteRecord({lap: lapRecord.lap}));
+    function handleDelete() {
+        dispatch(deleteRecord({ lap: lapRecord.lap }));
     }
 
     return (
         <div>
-            <p key={lapRecord.lap} style={{display: "inline"}}>
+            <p key={lapRecord.lap} style={{ display: "inline" }}>
                 {startDatetimeString} | {endDatetimeString} | {lapRecord.tag}
             </p>
             <button onClick={() => setIsEditing(true)}>edit</button>
@@ -200,7 +207,6 @@ type DailyRecordsEntriesProps = {
     }
 };
 
-
 function DailyRecordEntries(props: DailyRecordsEntriesProps) {
     const dailyRecords = Object.values(props.records).map((lapRecord) => {
         return (
@@ -215,14 +221,76 @@ function DailyRecordEntries(props: DailyRecordsEntriesProps) {
     );
 }
 
+function tagRecordsRows(tagEntries: Array<LapRecord>) {
+    const totalTime = tagEntries.reduce(
+        (acc, curr) => acc + (curr.endTime - curr.startTime),
+        0
+    );
+
+    const entries = tagEntries.map((lapRecord, index) => 
+        <TableRow key={lapRecord.tag+lapRecord.startTime.toString()}>
+            <TableCell align="left">
+                {/* <button className="dr-table-button">&#128393;</button> */}
+                <button className="dr-table-button dr-table-button-accent-red">&#128465;</button>
+            </TableCell>
+            <TableCell align="center">
+                {lapRecord.tag}
+            </TableCell>
+            <TableCell align="right">
+                {printTimeComponent(lapRecord.startTime)}
+            </TableCell>
+            <TableCell align="right">
+                {printTimeComponent(lapRecord.endTime)}
+            </TableCell>
+            {index === 0 && 
+                <TableCell 
+                    align="right" 
+                    rowSpan={tagEntries.length}
+                >
+                    <strong>{printTimeComponent(totalTime, "UTC")}</strong>
+                </TableCell>
+            }
+        </TableRow>
+    );
+
+    return entries;
+}
+
+type TagRecords = {
+    [key: string]: Array<LapRecord>
+}
+
 export default function DailyRecords() {
     const stateRecords = useSelector(selectRecords);
 
+    const tagRecords: TagRecords = {};
+    for (const lapRecord of Object.values(stateRecords.records)) {
+        if (tagRecords[lapRecord.tag] === undefined) {
+            tagRecords[lapRecord.tag] = [];
+        }
+        tagRecords[lapRecord.tag].push(lapRecord)
+    }
+    console.log(tagRecords);
+    console.log(stateRecords);
+
     return (
         <div>
-            <ManualRecord />
-            <TagSummary records={stateRecords.records} />
-            <DailyRecordEntries records={stateRecords.records} />
+            <TableContainer className="dr-table-container">
+                <Table sx={{ minWidth: "500px" }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="left"><button className="dr-table-button">&#x2b;</button></TableCell>
+                            <TableCell align="center">Tag</TableCell>
+                            <TableCell align="right">Start Time</TableCell>
+                            <TableCell align="right">End Time</TableCell>
+                            <TableCell align="right">Total Time</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Object.keys(tagRecords).map((key) => tagRecordsRows(tagRecords[key]))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 }
