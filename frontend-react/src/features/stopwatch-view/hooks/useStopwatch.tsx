@@ -24,6 +24,23 @@ export function useStopwatch() {
             clearInterval(intervalRef.current);
         };
     }, [])
+
+    useEffect(() => {
+        if ((stopwatch.state === StopwatchState.Started) 
+            && (intervalRef.current === null)
+        ) {
+            intervalRef.current = setInterval(handleTimerEvent, 1000);
+        }
+        if ((stopwatch.state === StopwatchState.Stopped) 
+            && (intervalRef.current !== null)
+        ) {
+            setElapsedTime(0);
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    }, [stopwatch])
+
+
     
     function handleTimerEvent() {
         if (!stopwatchRef.current.startTime)

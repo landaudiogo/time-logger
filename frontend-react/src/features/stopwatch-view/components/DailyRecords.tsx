@@ -183,10 +183,10 @@ function tagRecordsRows(tagEntries: Array<LapRecord>) {
     const entries = tagEntries.map((lapRecord, index) => 
         (index !== 0) ? 
             <TagRecordEntry 
-                key={lapRecord.tag+lapRecord.startTime.toString()} 
+                key={lapRecord.id} 
                 lapRecord={lapRecord} />: 
             <TagRecordEntry 
-                key={lapRecord.tag+lapRecord.startTime.toString()} 
+                key={lapRecord.id} 
                 lapRecord={lapRecord} 
                 firstRecordData={{ totalTime, rowSpan: tagEntries.length }}
             />

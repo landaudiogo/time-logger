@@ -1,6 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
 import { timerReducer } from "features/timer-view";
+import { Reducer } from "react";
 import { useDispatch } from "react-redux";
 import { printDateComponent } from './features/stopwatch-view';
 import { StopwatchType, StopwatchState } from "./features/stopwatch-view";
@@ -15,7 +16,7 @@ const storedDates = Object.keys(localStorage).filter((key) => {
 }).map(key => new Date(key));
 storedDates.sort((a,b) => ((a<b) ? 1 : -1));
 
-if (todaysDate !== printDateComponent(storedDates[0].getTime())) { 
+if (storedDates.length !== 0 && todaysDate !== printDateComponent(storedDates[0].getTime())) { 
     var todaysData = {};
     if (storedDates.length > 0) {
         const lastDate = printDateComponent(storedDates[0].getTime());
@@ -34,19 +35,39 @@ if (todaysDate !== printDateComponent(storedDates[0].getTime())) {
     todaysData = JSON.parse(data);
 }
 
+const appReducer = combineReducers({
+    stopwatch: stopwatchReducer,
+    records: recordsReducer,
+    timer: timerReducer,
+})
+
+const rootReducer: typeof appReducer = (state, action): RootState => {
+    if (action.type === "CONCURRENT_UPDATE") {
+        if (JSON.stringify(state) !== JSON.stringify(action.payload)) {
+            console.log("CONCURRENT_UPDATE");
+            return appReducer(action.payload, action)
+        }
+        return appReducer(state, action);
+    }
+    return appReducer(state, action);
+}
 
 const store = configureStore({
-    reducer: {
-        stopwatch: stopwatchReducer,
-        records: recordsReducer,
-        timer: timerReducer,
-    }, 
+    reducer: rootReducer, 
     preloadedState: todaysData
 })
 
 store.subscribe(() => {
     localStorage.setItem(todaysDate, JSON.stringify(store.getState()));
 });
+
+window.addEventListener("storage", (e: StorageEvent) => {
+    if (e.key === todaysDate) {
+        const data = localStorage.getItem(todaysDate) || "{}";
+        const todaysData = JSON.parse(data);
+        store.dispatch({ type: "CONCURRENT_UPDATE", payload: todaysData })
+    }
+})
 
 
 export type RootState = ReturnType<typeof store.getState>;
