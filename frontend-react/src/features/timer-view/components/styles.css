@@ -6,6 +6,15 @@
     margin: 0 auto;
 }
 
+.timer-remaining-text {
+    animation: blinker 0.8s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    opacity: 50%;
+  }
+}
+
 .timer-container {
     --content-width: 170px;
     height: 250px;

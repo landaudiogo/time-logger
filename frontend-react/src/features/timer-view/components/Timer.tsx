@@ -133,7 +133,13 @@ export default function Timer() {
                     }
                 />
             </div>
-            <h1>{printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
+            <h1 
+                className={
+                    (stopwatch.state === StopwatchState.Started && timerRemaining.getTime() <= 0) ? 
+                        "timer-remaining-text" : ""
+                }
+            >
+                {printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
             <div className="timer-buttons-tag-container">
                 <div className="timer-button-container">
                     <button className="timer-button timer-button-start" onClick={onStart}>start</button>
