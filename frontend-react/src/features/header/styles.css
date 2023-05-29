@@ -81,14 +81,21 @@
     cursor: pointer;
 }
 
-.page-option-first {
-    margin-top: 12px;
-}
-.page-option-last {
-    margin-bottom: 12px;
-    margin-top: 12px;
-}
 .page-option-text {
     text-align: center;
     font-weight: normal;
+    padding: 12px;
+}
+.page-option-text:hover {
+    background-color: var(--neutral-6);
+}
+.page-option-first {
+    padding-top: 8px;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.page-option-last {
+    padding-top: 8px;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
