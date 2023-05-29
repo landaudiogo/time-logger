@@ -92,7 +92,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
     }
 
     function handleDelete() {
-        dispatch(deleteRecord({ lap: lapRecord.lap }));
+        dispatch(deleteRecord({ id: lapRecord.id }));
     }
 
     return (

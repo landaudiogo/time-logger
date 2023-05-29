@@ -2,9 +2,10 @@ import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
 import { StopwatchType } from "../types";
+import { uuid } from "lib";
 
 export type LapRecord = {
-    lap: number,
+    id: string,
     tag: string,
     startTime: number,
     endTime: number
@@ -12,12 +13,12 @@ export type LapRecord = {
 
 type RecordsType = {
     records: {
-        [key: number]: LapRecord
+        [key: string]: LapRecord
     }
 }
 
 type RecordType = {
-    lap: number,
+    id: string,
     startTime: number,
     endTime: number,
     tag: string,
@@ -30,10 +31,8 @@ type ManualRecordType = {
 }
 
 type DeleteRecordAction = { 
-    lap: number,
+    id: string,
 }
-
-const count = { value: 0 };
 
 const initialState: RecordsType = {
     records: {}
@@ -46,7 +45,7 @@ const recordsSlice = createSlice({
         recordAdded: {
             reducer(state, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
-                state.records[payload.lap] = action.payload;
+                state.records[payload.id] = action.payload;
             },
             prepare: (stopwatch: StopwatchType) => {
                 if (!stopwatch.startTime || !stopwatch.endTime)
@@ -56,34 +55,32 @@ const recordsSlice = createSlice({
                         startTime: stopwatch.startTime,
                         endTime: stopwatch.endTime,
                         tag: stopwatch.tag,
-                        lap: count.value,
+                        id: uuid(),
                     }
                 };
-                count.value = count.value + 1;
                 return ret;
             },
         },
         manualRecordAdded: {
             reducer(state, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
-                state.records[payload.lap] = action.payload;
+                state.records[payload.id] = action.payload;
             }, 
             prepare: (manualRecord: ManualRecordType) => {
                 const ret = {
                     payload: {
                         ...manualRecord,
-                        lap: count.value
+                        id: uuid(),
                     }
                 };
-                count.value = count.value + 1;
                 return ret;
             }
         },
         modifyRecord(state, action: PayloadAction<RecordType>) {
-            state.records[action.payload.lap] = action.payload;
+            state.records[action.payload.id] = action.payload;
         },
         deleteRecord(state, action: PayloadAction<DeleteRecordAction>) {
-            delete state.records[action.payload.lap];
+            delete state.records[action.payload.id];
         }
     }
 });
