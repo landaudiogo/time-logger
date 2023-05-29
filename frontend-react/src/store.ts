@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
+import { timerReducer } from "features/timer-view";
 import { useDispatch } from "react-redux";
 import { printDateComponent } from './features/stopwatch-view';
 import { StopwatchType, StopwatchState } from "./features/stopwatch-view";
@@ -38,6 +39,7 @@ const store = configureStore({
     reducer: {
         stopwatch: stopwatchReducer,
         records: recordsReducer,
+        timer: timerReducer,
     }, 
     preloadedState: todaysData
 })

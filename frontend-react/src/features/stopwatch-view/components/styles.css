@@ -24,7 +24,6 @@
     color: var(--primary-2); 
     background-color: var(--neutral-7);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 1px 3px 0px;
-    margin: 0 4px;
 }
 .dr-table-button:hover { 
     background-color: var(--primary-6-5);

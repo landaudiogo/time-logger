@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
 import { tagAdded, addRecord } from "features/stopwatch-view/store";
+import { timerDurationAdded, selectTimer } from "../store";
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
 import "./styles.css"
@@ -10,13 +11,14 @@ enum TimerUnit {
     Hours, Minutes, Seconds
 }
 
-const DefaultTimer: Date = new Date(1000*60*25);
 
 export default function Timer() {
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
     const dispatch: AppDispatch = useDispatch();
-    const [timerRemaining, setTimerRemaining] = useState<Date>(DefaultTimer);
-    const [timerDuration, setTimerDuration] = useState<Date>(DefaultTimer);
+    const timerDurationStore = useSelector(selectTimer);
+    const defaultTimer = new Date(timerDurationStore.duration);
+    const [timerRemaining, setTimerRemaining] = useState<Date>(defaultTimer);
+    const [timerDuration, setTimerDuration] = useState<Date>(defaultTimer);
     const timerDurationRef = useRef<Date>(timerDuration);
     timerDurationRef.current = timerDuration;
     const terminated = useRef<boolean>(false);
@@ -50,6 +52,10 @@ export default function Timer() {
                 break;
         }
     }, [stopwatch])
+
+    useEffect(() => {
+        dispatch(timerDurationAdded({duration: timerDurationRef.current.getTime()}));
+    }, [timerDuration])
 
     function onChangeTimer(timerUnit: TimerUnit) {
         const handleTimerCallback = (e: React.FormEvent<HTMLInputElement>) => {

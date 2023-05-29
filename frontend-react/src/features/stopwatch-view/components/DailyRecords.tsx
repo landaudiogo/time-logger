@@ -99,9 +99,13 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         <TableRow>
             <TableCell 
                 align="left" 
-                onClick={handleDelete}
             >
-                <button className="dr-table-button dr-table-button-accent-red">&#128465;</button>
+                <button 
+                    className="dr-table-button dr-table-button-accent-red"
+                    onClick={handleDelete}
+                >
+                    &#128465;
+                </button>
             </TableCell>
             <TableCell 
                 align="center"
