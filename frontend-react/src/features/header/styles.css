@@ -12,6 +12,7 @@
 .active-title {
     position: relative;
     z-index: 1;
+    font-weight: normal;
 }
 .active-title:hover {
     cursor: pointer;
@@ -20,8 +21,8 @@
 .options-indicator { 
     position: absolute;
     right: -30px; 
-    top: 8px;
-    font-size: 24px;
+    top: 12px;
+    font-size: 16px;
 }
 
 .element-cover-page {
@@ -43,7 +44,7 @@
 
 
 .page-options {
-    background-color: var(--neutral-6);
+    background-color: var(--neutral-7);
     top: 0px;
     margin: 0 auto;
     position: absolute;
@@ -89,4 +90,5 @@
 }
 .page-option-text {
     text-align: center;
+    font-weight: normal;
 }
