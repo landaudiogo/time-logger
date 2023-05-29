@@ -24,5 +24,5 @@ export function printDateComponent(epoch: number, timezone?: string): string {
         options["timeZone"] = timezone;
     }
     return date.toLocaleString("en-GB", options)
-        .split(' ')[0].slice(0, -1);
+        .split(' ')[0].slice(0, -1).split("/").reverse().join("/");
 }
