@@ -13,3 +13,4 @@ docker build \
     "${script_dir}"
 
 docker push "dclandau/time-logger:frontend_${commit_hash}"
+printf "\nfrontend_${commit_hash}\n"
