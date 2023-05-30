@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
-import StopwatchView from "./features/stopwatch-view"
-import TimerView from "./features/timer-view"
-import Header from "./features/header"
-import Homepage from "./Homepage"
+import StopwatchView from "./features/stopwatch-view";
+import TimerView from "./features/timer-view";
+import Header from "./features/header";
+import Footer from "./features/footer";
 import './App.css';
 import { Provider } from "react-redux";
 import { store } from "store";
@@ -18,6 +18,7 @@ function App() {
             <Route path='/timer' element={<TimerView/>}/>
             <Route path="*" element={<Navigate to="/"/>}/> 
         </Routes>
+        <Footer />
     </Provider>
   );
 }

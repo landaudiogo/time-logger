@@ -5,6 +5,10 @@ cd "${script_dir}"
 
 commit_hash="$(git rev-parse --short HEAD)"
 
+cat <<EOF >.env
+REACT_APP_COMMIT_HASH=${commit_hash}
+EOF
+
 npm run build
 
 docker build \
