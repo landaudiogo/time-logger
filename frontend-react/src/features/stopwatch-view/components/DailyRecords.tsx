@@ -87,6 +87,9 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         date.setMinutes(timeComponents[1]);
         date.setSeconds(timeComponents[2]);
         newRecord.endTime = date.getTime();
+        if (newRecord.startTime > newRecord.endTime) { 
+            return;
+        }
         dispatch(modifyRecord(newRecord));
         setEditingEndTime((curr) => !curr);
     }
