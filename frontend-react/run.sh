@@ -1,9 +1,16 @@
 #!/bin/bash
 
-docker build -t time-logger/frontend .
+if 
+    grep "^time-logger-frontend$" \
+        <(docker ps --format "{{.Names}}") > /dev/null
+then
+    docker stop time-logger-frontend \
+        && docker rm time-logger-frontend
+fi
 
 docker run \
-    -it --rm \
+    -d \
     --name time-logger-frontend \
-    -p 80:3000 \
-    time-logger/frontend
+    --restart always \
+    -p 0.0.0.0:80:3000 \
+    "dclandau/time-logger:$1"

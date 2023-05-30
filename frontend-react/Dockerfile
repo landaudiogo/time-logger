@@ -11,5 +11,7 @@ RUN npm install serve
 
 ADD ./build ./build
 
+ENV COMMIT_HASH=$COMMIT_HASH
+
 # start app
 CMD ["serve", "-s", "build", "-l", "3000"]
