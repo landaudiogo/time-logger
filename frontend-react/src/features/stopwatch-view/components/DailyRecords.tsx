@@ -244,10 +244,10 @@ export default function DailyRecords() {
                                 </button>
                             </TableCell>
                             <TableCell align="center">Tag</TableCell>
-                            <TableCell align="right">Start Time</TableCell>
-                            <TableCell align="right">End Time</TableCell>
-                            <TableCell align="right">Time Diff</TableCell>
-                            <TableCell align="right">Total Time</TableCell>
+                            <TableCell align="center">Start Time</TableCell>
+                            <TableCell align="center">End Time</TableCell>
+                            <TableCell align="center">Split</TableCell>
+                            <TableCell align="center">Total Time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
