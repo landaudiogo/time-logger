@@ -28,7 +28,9 @@ export default function Timer() {
         if (terminated.current === true){
             return;
         }
-        if (timerDuration.getTime() - elapsedTime < 0) {
+        if ((timerDuration.getTime() - elapsedTime < 0)
+            && (timerDuration.getTime() - elapsedTime > -1000)
+        ) {
             a.play();
             terminated.current = true;
         }
