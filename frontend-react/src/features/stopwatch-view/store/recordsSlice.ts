@@ -70,6 +70,7 @@ const recordsSlice = createSlice({
                 const ret = {
                     payload: {
                         ...manualRecord,
+                        tag: manualRecord.tag.trim(),
                         id: uuid(),
                     }
                 };
@@ -77,7 +78,10 @@ const recordsSlice = createSlice({
             }
         },
         modifyRecord(state, action: PayloadAction<RecordType>) {
-            state.records[action.payload.id] = action.payload;
+            state.records[action.payload.id] = {
+                ...action.payload,
+                tag: action.payload.tag.trim(),
+            };
         },
         deleteRecord(state, action: PayloadAction<DeleteRecordAction>) {
             delete state.records[action.payload.id];

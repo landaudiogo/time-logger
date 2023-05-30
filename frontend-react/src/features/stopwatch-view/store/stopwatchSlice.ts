@@ -33,7 +33,7 @@ const stopwatchSlice = createSlice({
 
         },
         tagAdded(stopwatch, action: PayloadAction<TagAddedType>) {
-            stopwatch.tag = action.payload.tag;
+            stopwatch.tag = action.payload.tag.trim();
         }
 
     }
