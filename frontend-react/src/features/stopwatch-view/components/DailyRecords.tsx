@@ -162,6 +162,11 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                     </p>
                 }
             </TableCell>
+            <TableCell 
+                align="right"
+            >
+                {printTimeComponent(lapRecord.endTime - lapRecord.startTime, "UTC")}
+            </TableCell>
             {(firstRecordData !== undefined) &&
                 <TableCell 
                     align="right" 
@@ -238,13 +243,14 @@ export default function DailyRecords() {
                             <TableCell align="center">Tag</TableCell>
                             <TableCell align="right">Start Time</TableCell>
                             <TableCell align="right">End Time</TableCell>
+                            <TableCell align="right">Time Diff</TableCell>
                             <TableCell align="right">Total Time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {Object.keys(tagRecords).map((key) => tagRecordsRows(tagRecords[key]))}
                         <TableRow>
-                            <TableCell colSpan={4} align="right">
+                            <TableCell colSpan={5} align="right">
                                 <strong>Total Time:</strong>
                             </TableCell>
                             <TableCell align="right">
