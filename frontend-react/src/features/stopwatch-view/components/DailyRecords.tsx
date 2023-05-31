@@ -38,22 +38,22 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         firstRecordData
     } = props;
 
-    function tagHandleKeyDown(e: React.KeyboardEvent) {
-        if (e.key !== "Enter") 
-            return;
+    function editTag(value: string) { 
         const newRecord = {...lapRecord};
-        const target = e.target as HTMLInputElement;
-        newRecord.tag = target.value;
+        newRecord.tag = value
         dispatch(modifyRecord(newRecord));
         setEditingTag((curr) => !curr);
     }
 
-    function startHandleKeyDown(e: React.KeyboardEvent) {
+    function tagHandleKeyDown(e: React.KeyboardEvent) {
         if (e.key !== "Enter") 
             return;
-        const newRecord = {...lapRecord};
         const target = e.target as HTMLInputElement;
-        const value = target.value; 
+        editTag(target.value);
+    }
+
+    function editEndTime(value: string) {
+        const newRecord = {...lapRecord};
         if (!validateTimeInput(value)) { 
             return
         }
@@ -71,15 +71,19 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         setEditingStartTime((curr) => !curr);
     }
 
-    function endHandleKeyDown(e: React.KeyboardEvent) {
+    function startHandleKeyDown(e: React.KeyboardEvent) {
         if (e.key !== "Enter") 
             return;
-        const newRecord = {...lapRecord};
         const target = e.target as HTMLInputElement;
         const value = target.value; 
+        editEndTime(value);
+    }
+
+    function editStartTime(value: string) {
         if (!validateTimeInput(value)) { 
             return
         }
+        const newRecord = {...lapRecord};
         const timeComponents = value.split(":").map(numStr => parseInt(numStr));
         const date = new Date(lapRecord.startTime);
         date.setHours(0, 0, 0, 0);
@@ -92,6 +96,14 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         }
         dispatch(modifyRecord(newRecord));
         setEditingEndTime((curr) => !curr);
+    }
+
+    function endHandleKeyDown(e: React.KeyboardEvent) {
+        if (e.key !== "Enter") 
+            return;
+        const target = e.target as HTMLInputElement;
+        const value = target.value; 
+        editStartTime(value);
     }
 
     function handleDelete() {
@@ -118,7 +130,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                         className="dr-cell-editing dr-cell-tag-editing"
                         onKeyDown={tagHandleKeyDown}
                         defaultValue={lapRecord.tag}
-                        onBlur={() => setEditingTag((curr) => !curr)}
+                        onBlur={(e) => editTag(e.currentTarget.value)}
                         autoFocus
                     />:
                     <p
@@ -137,7 +149,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                         className="dr-cell-editing dr-cell-time-editing"
                         onKeyDown={startHandleKeyDown}
                         defaultValue={printTimeComponent(lapRecord.startTime)}
-                        onBlur={() => setEditingStartTime((curr) => !curr)}
+                        onBlur={(e) => editStartTime(e.currentTarget.value)}
                         autoFocus
                     />:
                     <p
@@ -155,7 +167,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                         className="dr-cell-editing dr-cell-time-editing"
                         onKeyDown={endHandleKeyDown}
                         defaultValue={printTimeComponent(lapRecord.endTime)}
-                        onBlur={() => setEditingEndTime((curr) => !curr)}
+                        onBlur={(e) => editEndTime(e.currentTarget.value)}
                         autoFocus
                     />:
                     <p
