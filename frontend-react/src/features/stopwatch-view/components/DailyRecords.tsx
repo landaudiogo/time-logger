@@ -199,6 +199,9 @@ function tagRecordsRows(tagEntries: Array<LapRecord>) {
         (acc, curr) => acc + (curr.endTime - curr.startTime),
         0
     );
+    tagEntries.sort((a, b) => {
+        return b.startTime - a.startTime;
+    });
 
     const entries = tagEntries.map((lapRecord, index) => 
         (index !== 0) ? 
