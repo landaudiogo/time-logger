@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
 import { timerReducer } from "features/timer-view";
-import { Reducer } from "react";
 import { useDispatch } from "react-redux";
 import { printDateComponent } from './features/stopwatch-view';
 import { StopwatchType, StopwatchState } from "./features/stopwatch-view";
+import { PersistedData } from "types";
 
 const todaysDate: string = printDateComponent(new Date().getTime());
 
@@ -16,18 +16,16 @@ const storedDates = Object.keys(localStorage).filter((key) => {
 }).map(key => new Date(key));
 storedDates.sort((a,b) => ((a<b) ? 1 : -1));
 
-if (storedDates.length !== 0 && todaysDate !== printDateComponent(storedDates[0].getTime())) { 
-    var todaysData = {};
-    if (storedDates.length > 0) {
-        const lastDate = printDateComponent(storedDates[0].getTime());
-        const data = localStorage.getItem(lastDate) || "{}";
-        const lastData = JSON.parse(data);
-        var stopwatch: StopwatchType = lastData.stopwatch;
-        if (stopwatch.state !== StopwatchState.Started) { 
-            todaysData = {};
-        } else {
-            todaysData = {stopwatch: stopwatch}; 
-        }
+var todaysData: PersistedData = {};
+if (storedDates.length > 0 && todaysDate !== printDateComponent(storedDates[0].getTime())) { 
+    const lastDate = printDateComponent(storedDates[0].getTime());
+    const data = localStorage.getItem(lastDate) || "{}";
+    const lastData = JSON.parse(data);
+    todaysData.timer = lastData.timer;
+
+    var stopwatch: StopwatchType = lastData.stopwatch;
+    if (stopwatch.state === StopwatchState.Started) { 
+        todaysData.stopwatch = stopwatch;
     }
     localStorage.setItem(todaysDate, JSON.stringify(todaysData));
 } else {
