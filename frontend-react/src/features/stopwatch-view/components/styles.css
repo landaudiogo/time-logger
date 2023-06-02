@@ -15,6 +15,7 @@
 
 .dr-table-container .MuiTableCell-root {
     color: var(--primary-1);
+    max-width: 30ch;
 }
 
 .dr-table-button {
@@ -59,6 +60,7 @@
 .dr-cell-display-tag {
     overflow-x: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 
     min-width: 40px;
     min-height: 20px;
