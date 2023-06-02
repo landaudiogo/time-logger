@@ -6,9 +6,13 @@ export default function Header() {
     const location = useLocation();
     var locationText: string;
     if (location.pathname === "/timer") {
-        locationText = "Timer"
+        locationText = "Timer";
+    } else if (location.pathname === "/stopwatch") {
+        locationText = "Stopwatch";
+    } else if (location.pathname === "/statistics") {
+        locationText = "Statistics";
     } else {
-        locationText = "Stopwatch"
+        locationText = "";
     }
 
     const [active, setActive] = useState<boolean>();
@@ -52,6 +56,9 @@ export default function Header() {
                     </Link>
                     <Link to="/timer" className="page-option">
                         <h2 className="page-option-text page-option-last">Timer</h2>
+                    </Link>
+                    <Link to="/statistics" className="page-option">
+                        <h2 className="page-option-text page-option-last">Statistics</h2>
                     </Link>
                 </div>
             }
