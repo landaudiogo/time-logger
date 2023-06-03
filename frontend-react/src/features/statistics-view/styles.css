@@ -13,13 +13,39 @@
     width: fit-content;
     border-radius: var(--border-radius);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    min-width: 800px;
-    min-height: 400px;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
 }
 
 .st-canvas {
     background-color: var(--neutral-6);
+    width: 800px;
+    height: 400px;
     padding: 8px;
     border-radius: var(--border-radius);
+    box-shadow: inset 0 0 10px hsla(0, 0%, 0%, 0.15);
+}
+
+.st-sunburst-plot { 
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.st-sunburst-plot-title {
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+
+.st-sunburst-wrap {
+    width: 800px;
+    height: 400px;
+    display: flex;
+    justify-content: space-around; 
+    align-items: center;
+    background-color: var(--neutral-6);
     box-shadow: inset 0 0 10px hsla(0, 0%, 0%, 0.15);
 }

@@ -19,9 +19,11 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.12.16",
+    "plotly.js": "^2.23.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-plotly.js": "^2.6.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
@@ -55,6 +57,8 @@
     ]
   },
   "devDependencies": {
+    "@types/plotly.js": "^2.12.18",
+    "@types/react-plotly.js": "^2.6.0",
     "@types/uuid": "^9.0.1",
     "file-loader": "^6.2.0"
   }
