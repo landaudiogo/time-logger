@@ -75,9 +75,12 @@ export const options = {
 };
 
 export default function Cumulative() {
-    const records = useSelector(selectRecords);
+    const stateRecords = useSelector(selectRecords);
+    const records = [...Object.values(stateRecords.records)].sort((a, b) => {
+        return a.startTime > b.startTime ? 1 : -1;
+    })
     var minStartTime: number;
-    const tagCumulative = Object.values(records.records).reduce(
+    const tagCumulative = Object.values(records).reduce(
         (acc, record) => {
             if (acc[record.tag] === undefined) {
                 acc[record.tag] = [];

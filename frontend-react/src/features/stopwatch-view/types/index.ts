@@ -14,8 +14,8 @@ export type StopwatchType = {
 
 export type LapRecord = {
     lap: number,
-    start: number, 
-    end: number,
+    startTime: number, 
+    endTime: number,
     tag: string
 }
 
