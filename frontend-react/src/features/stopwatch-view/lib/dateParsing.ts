@@ -26,3 +26,19 @@ export function printDateComponent(epoch: number, timezone?: string): string {
     return date.toLocaleString("en-GB", options)
         .split(' ')[0].slice(0, -1).split("/").reverse().join("/");
 }
+
+export function validateTimeInput(timeString: string) {
+    if (timeString.match("^[0-9]{2}:[0-9]{2}:[0-9]{2}$") === null) {
+        console.log("Invalid time string");
+        return false;
+    }
+    return true;
+}
+
+export function validateDateInput(dateString: string) {
+    if (dateString.match("^[0-9]{4}/[0-9]{2}/[0-9]{2}$") === null) {
+        console.log("Invalid time string");
+        return false;
+    }
+    return true;
+}

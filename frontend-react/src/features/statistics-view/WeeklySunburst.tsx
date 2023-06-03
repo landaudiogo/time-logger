@@ -4,14 +4,16 @@ import Plot from 'react-plotly.js';
 import "./styles.css";
 import { getPersistedDays } from "lib/localstorage";
 import { printDateComponent } from "features/stopwatch-view";
+import { uuid } from "lib";
+import { validateDateInput } from "features/stopwatch-view";
 
 
 export default function WeeklySunburst() {
-    const [weekOffset, setWeekOffset] = useState(0);
+    const [day, setDay] = useState(new Date());
     const inputRef = useRef<HTMLInputElement>(null);
+    const uid = uuid();
 
-    const today = new Date();
-    const offsetDay = new Date(today.getTime() - weekOffset*7*24*60*60*1000);
+    const offsetDay = day;
     offsetDay.setHours(0,0,0,0);
     const mondayBeforeOffset = new Date(offsetDay.getTime() - (offsetDay.getDay() + 6) % 7*24*60*60*1000);
     const mondayAfterOffset = new Date(mondayBeforeOffset.getTime() + 7*24*60*60*1000);
@@ -24,8 +26,20 @@ export default function WeeklySunburst() {
     })
     sinceMonday.sort((a, b) => (a > b) ? 1 : -1);
 
+    function handleKeyDown(e: React.KeyboardEvent) { 
+        if (e.key !== "Enter") {
+            return;
+        }
+        const target = e.target as HTMLInputElement;
+        if (validateDateInput(target.value)) {
+            console.log("---2---")
+            setDay(new Date(target.value));
+        }
+    }
+
     const data = [{
         "type": "sunburst" as const,
+        "ids": [] as string[],
         "labels": [] as string[],
         "parents": [] as string[],
         "values": [] as number[],
@@ -64,22 +78,19 @@ export default function WeeklySunburst() {
         for (const [tag, totalTime] of Object.entries(tagTimes)) {
             const tagTree = tag.split("/");
             var parent = tagTree.slice(0, tagTree.length - 1).join("/");
-            if (tag === "") {
-                data[0].labels.push("no-tag")
-            }
-            else {
-                data[0].labels.push(tag)
-            }
             if (parent === "") {
-                parent = "total";
+                parent = "total_" + uid;
                 tagTotalTime += totalTime;
             }
+            data[0].labels.push(tag === "" ? "no-tag" : tagTree[tagTree.length-1])
             data[0].parents.push(parent);
+            data[0].ids.push(tag);
             data[0].values.push(totalTime);
         }
 
     }
     data[0].labels.push("total");
+    data[0].ids.push("total_" + uid);
     data[0].parents.push("");
     data[0].values.push(tagTotalTime);
 
@@ -95,26 +106,40 @@ export default function WeeklySunburst() {
     return (
         <div className="st-sunburst-plot">
             <h2 className="st-sunburst-plot-title">
-                {monthDay(printDateComponent(mondayBeforeOffset.getTime()))}
-                -
-                {monthDay(printDateComponent(mondayAfterOffset.getTime()-24*60*60*1000))}
+                Week
             </h2>
+            <h4 className="st-sunburst-plot-title">
+                {monthDay(printDateComponent(mondayBeforeOffset.getTime()))}
+                {" - "}
+                {monthDay(printDateComponent(mondayAfterOffset.getTime()-24*60*60*1000))}
+            </h4>
             {data[0].values.length === 1 ? 
-                <p>No Data</p>:
+                <div 
+                    style={{
+                        width: 300, 
+                        height: 300,
+                        display: "flex", 
+                        justifyContent: "center", 
+                        alignItems: "center",
+                    }}
+                >
+                    <p>No Data</p>
+                </div>:
                 <Plot
                     data={data}
                     layout={layout1}
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
-            <input 
-                ref={inputRef}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        setWeekOffset(parseInt(inputRef.current?.value || "0") || 0)
-                    }
-                }}
-            />
+            <div>
+                <span>Day: </span>
+                <input 
+                    ref={inputRef}
+                    onKeyDown={handleKeyDown}
+                    className="st-sunburst-date-input"
+                    defaultValue={printDateComponent(day.getTime())}
+                />
+            </div>
         </div>
     );
 }
