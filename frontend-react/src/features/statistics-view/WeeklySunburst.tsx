@@ -1,6 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { LapRecord, selectRecords } from "../stopwatch-view";
+import React, { useState, useRef } from "react";
+import { LapRecord } from "../stopwatch-view";
 import Plot from 'react-plotly.js';
 import "./styles.css";
 import { getPersistedDays } from "lib/localstorage";
@@ -8,13 +7,18 @@ import { printDateComponent } from "features/stopwatch-view";
 
 
 export default function WeeklySunburst() {
-    const todaysRecords = useSelector(selectRecords);
+    const [weekOffset, setWeekOffset] = useState(0);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const today = new Date();
+    const offsetDay = new Date(today.getTime() - weekOffset*7*24*60*60*1000);
+    offsetDay.setHours(0,0,0,0);
+    const mondayBeforeOffset = new Date(offsetDay.getTime() - (offsetDay.getDay() + 6) % 7*24*60*60*1000);
+    const mondayAfterOffset = new Date(mondayBeforeOffset.getTime() + 7*24*60*60*1000);
 
     const days = getPersistedDays().map((key) => new Date(key));
-    const prevMonday = new Date();
-    prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);
     const sinceMonday = days.filter((day) => {
-        if (day >= prevMonday) {
+        if (day >= mondayBeforeOffset && day <= mondayAfterOffset) {
             return day
         }
     })
@@ -29,13 +33,14 @@ export default function WeeklySunburst() {
         "marker": { "line": { "width": 2 } },
         "branchvalues": 'total' as const,
     }];
-    var records: { [key: string]: LapRecord } = {};
+    var records: LapRecord[] = [];
 
     for (const day of sinceMonday) {
         const storageKey = printDateComponent(day.getTime());
         const storageValue = localStorage.getItem(storageKey) || "";
         const parsedValue = JSON.parse(storageValue);
-        records = { ...records, ...parsedValue.records?.records };
+        const dayRecords: LapRecord[] = Object.values(parsedValue.records?.records);
+        records = [...records, ...dayRecords];
     }
 
     const tagLevelCumulative = {} as { [key: number]: { [key: string]: number } };
@@ -62,8 +67,8 @@ export default function WeeklySunburst() {
             if (tag === "") {
                 data[0].labels.push("no-tag")
             }
-            else { 
-                data[0].labels.push(tag) 
+            else {
+                data[0].labels.push(tag)
             }
             if (parent === "") {
                 parent = "total";
@@ -83,14 +88,32 @@ export default function WeeklySunburst() {
         width: 300, height: 300,
         paper_bgcolor: "hsl(207, 22%, 90%)",
     };
+    function monthDay(date: string) {
+        return date.split("/").slice(1).join("/");
+    }
 
     return (
         <div className="st-sunburst-plot">
-            <h2 className="st-sunburst-plot-title">Weekly Shares</h2>
-            <Plot
-                data={data}
-                layout={layout1}
-                config={{ modeBarButtonsToRemove: ['toImage'] }}
+            <h2 className="st-sunburst-plot-title">
+                {monthDay(printDateComponent(mondayBeforeOffset.getTime()))}
+                -
+                {monthDay(printDateComponent(mondayAfterOffset.getTime()-24*60*60*1000))}
+            </h2>
+            {data[0].values.length === 1 ? 
+                <p>No Data</p>:
+                <Plot
+                    data={data}
+                    layout={layout1}
+                    config={{ modeBarButtonsToRemove: ['toImage'] }}
+                />
+            }
+            <input 
+                ref={inputRef}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        setWeekOffset(parseInt(inputRef.current?.value || "0") || 0)
+                    }
+                }}
             />
         </div>
     );
