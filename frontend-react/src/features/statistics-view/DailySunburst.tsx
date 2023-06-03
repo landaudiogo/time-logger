@@ -6,7 +6,7 @@ import "./styles.css";
 
 
 export default function DailySunburst() { 
-    var data = [{
+    const data = [{
         "type": "sunburst" as const,
         "labels": [] as string[],
         "parents": [] as string[],

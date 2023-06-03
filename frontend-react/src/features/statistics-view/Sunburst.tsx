@@ -9,6 +9,7 @@ export default function Sunburst() {
                 className="st-sunburst-wrap"
             >
                 <DailySunburst />
+                <WeeklySunburst />
             </div>
         </div>
     )
