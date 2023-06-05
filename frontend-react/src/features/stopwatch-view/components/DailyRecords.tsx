@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
-import { LapRecord, modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
+import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
+import { LapRecord } from "../types";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

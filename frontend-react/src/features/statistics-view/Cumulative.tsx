@@ -11,9 +11,15 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useSelector } from "react-redux";
+
 import { selectRecords } from "features/stopwatch-view";
+import { recordsCumulativeDataPoints } from "./lib/dataProcessing";
+import { LapRecord } from "features/stopwatch-view";
+import { uuid } from "lib";
+
 import 'chartjs-adapter-date-fns';
 import "./styles.css";
+
 
 ChartJS.register(
     TimeScale,
@@ -49,7 +55,7 @@ export const options = {
     scales: {
         x: {
             type: "time" as const,
-            min: 0,
+            //min: 0,
             ticks: {
                 stepSize: 60,
                 color: "hsl(206, 44%, 22%)",
@@ -76,81 +82,46 @@ export const options = {
 
 export default function Cumulative() {
     const stateRecords = useSelector(selectRecords);
-    const records = [...Object.values(stateRecords.records)].sort((a, b) => {
-        return a.startTime > b.startTime ? 1 : -1;
-    })
-    var minStartTime: number;
-    const tagCumulative = Object.values(records).reduce(
+    const uid = uuid();
+
+    const tagRecords = Object.values(stateRecords.records).reduce(
         (acc, record) => {
             if (acc[record.tag] === undefined) {
                 acc[record.tag] = [];
             }
-            if (options.scales.x.min === 0 || record.startTime < options.scales.x.min) {
-                options.scales.x.min = Math.floor(record.startTime / (1000 * 60 * 60)) * 1000 * 60 * 60;
-            }
-            const tagArray = acc[record.tag];
-            if (tagArray.length === 0) {
-                tagArray.push({
-                    x: record.startTime,
-                    y: 0,
-                });
-                tagArray.push({
-                    x: record.endTime,
-                    y: (record.endTime - record.startTime) / (1000 * 60 * 60),
-                });
-            } else {
-                const tagLastElement = tagArray[tagArray.length - 1];
-                tagArray.push({
-                    x: record.startTime,
-                    y: tagLastElement.y,
-                })
-                tagArray.push({
-                    x: record.endTime,
-                    y: tagLastElement.y + (record.endTime - record.startTime) / (1000 * 60 * 60)
-                })
-            }
-
-            const totalArray = acc["total"];
-            if (totalArray.length === 0) {
-                totalArray.push({
-                    x: record.startTime,
-                    y: 0,
-                });
-                totalArray.push({
-                    x: record.endTime,
-                    y: (record.endTime - record.startTime) / (1000 * 60 * 60),
-                });
-            } else {
-                const totalLastElement = totalArray[totalArray.length - 1];
-                totalArray.push({
-                    x: record.startTime,
-                    y: totalLastElement.y,
-                })
-                totalArray.push({
-                    x: record.endTime,
-                    y: totalLastElement.y + (record.endTime - record.startTime) / (1000 * 60 * 60)
-                })
-            }
+            acc[record.tag].push({...record});
             return acc;
         },
-        { total: [] } as { [key: string]: Array<{ x: number, y: number }> }
+        {} as { [key: string]: Array<LapRecord> }
+    )
+    tagRecords[`total_${uid}`] = [...Object.values(stateRecords.records)];
+
+    const tagDataPoints = Object.entries(tagRecords).reduce(
+        (acc, [tag, records]) => {
+            acc[tag] = recordsCumulativeDataPoints(records);
+            return acc; 
+        }, 
+        { } as { [key: string]: Array<{x: number, y:number}>}
     )
 
     const data = {
-        datasets: Object.entries(tagCumulative).map(([tag, cumulativeArray], index) => {
-            const increment = 255 / (Object.keys(tagCumulative).length + 1);
+        datasets: Object.entries(tagDataPoints).map(([tag, cumulativeArray], index) => {
+            const increment = 255 / (Object.keys(tagDataPoints).length + 1);
             var borderColor: string;
             var backgroundColor: string;
-            if (tag !== "total") {
+            var label: string;
+            if (tag !== `total_${uid}`) {
                 borderColor = `hsl(${increment * (index + 1)}, 70%, 50%)`;
                 backgroundColor = `hsl(${increment * (index + 1)}, 70%, 70%)`;
+                label = tag;
             } else {
                 borderColor = "hsl(207, 64%, 38%, 20%)";
-                backgroundColor = "hsl(207, 64%, 58%, 20%)"
+                backgroundColor = "hsl(207, 64%, 58%, 20%)";
+                label = "total";
             }
             return {
-                label: tag,
-                data: cumulativeArray,
+                label: label,
+                data: cumulativeArray.map(({x, y}) => ({x: x, y: y/(1000*60*60)})),
                 borderColor: borderColor,
                 backgroundColor: backgroundColor,
             }

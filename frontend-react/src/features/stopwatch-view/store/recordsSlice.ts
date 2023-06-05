@@ -1,15 +1,9 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
-import { StopwatchType } from "../types";
+import { LapRecord, StopwatchType } from "../types";
 import { uuid } from "lib";
 
-export type LapRecord = {
-    id: string,
-    tag: string,
-    startTime: number,
-    endTime: number
-}
 
 type RecordsType = {
     records: {
