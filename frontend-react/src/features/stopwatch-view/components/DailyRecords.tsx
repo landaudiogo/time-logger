@@ -45,8 +45,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         dispatch(modifyRecord(newRecord));
         setEditingTag(false);
     }
-
-    function tagHandleKeyDown(e: React.KeyboardEvent) {
+function tagHandleKeyDown(e: React.KeyboardEvent) {
         if (e.key !== "Enter") 
             return;
         const target = e.target as HTMLInputElement;
@@ -87,15 +86,15 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         }
         const newRecord = {...lapRecord};
         const timeComponents = value.split(":").map(numStr => parseInt(numStr));
-        const date = new Date(lapRecord.startTime);
+        let date = new Date(lapRecord.startTime);
         date.setHours(0, 0, 0, 0);
         date.setHours(timeComponents[0]);
         date.setMinutes(timeComponents[1]);
         date.setSeconds(timeComponents[2]);
-        newRecord.endTime = date.getTime();
-        if (newRecord.startTime > newRecord.endTime) { 
-            console.log("Start time cannot be bigger than end time");
-            return;
+        if (newRecord.startTime > date.getTime()) {
+            newRecord.endTime = date.getTime() + 1000*60*60*24;
+        } else {
+            newRecord.endTime = date.getTime();
         }
         dispatch(modifyRecord(newRecord));
         setEditingEndTime(false);
