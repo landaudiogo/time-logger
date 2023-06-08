@@ -1,0 +1,13 @@
+.tag-input { 
+    margin-top: 16px;
+    width: 170px;
+    background-color: var(--neutral-6);
+}
+
+.tag-input input {
+    background-color: var(--neutral-6);
+    box-shadow: none;
+}
+.tag-input input:focus {
+    background-color: var(--neutral-6);
+}

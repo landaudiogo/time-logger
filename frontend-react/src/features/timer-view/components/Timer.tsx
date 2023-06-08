@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
-import { tagAdded, addRecord } from "features/stopwatch-view/store";
-import { timerDurationAdded, selectTimer } from "../store";
+
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
+import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
+import { tagAdded, addRecord } from "features/stopwatch-view/store";
+import { Tag } from "features/tag";
+
+import { timerDurationAdded, selectTimer } from "../store";
 import "./styles.css"
 
 enum TimerUnit {
@@ -154,7 +157,7 @@ export default function Timer() {
                     <button className="timer-button timer-button-stop" onClick={handleStop}>stop</button>
                 </div>
                 <div>
-                    <input className="timer-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag"/>
+                    <Tag/>
                 </div>
             </div>
         </div>

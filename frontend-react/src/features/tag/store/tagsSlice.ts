@@ -49,4 +49,4 @@ function addTag(tagString: string) {
 
 
 export default tagsRootReducer;
-export { addTag };
+export { addTag, selectTags };

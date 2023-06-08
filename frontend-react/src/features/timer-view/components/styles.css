@@ -16,7 +16,7 @@
 
 .timer-container {
     --content-width: 170px;
-    height: 250px;
+    height: 270px;
     margin: 16px 0px;
     display: flex; 
     flex-direction: column; 
@@ -63,7 +63,6 @@
     display: flex; 
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 8px;
 }
 
 .timer-button {

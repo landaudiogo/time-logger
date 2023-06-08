@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
+import { Tag } from "features/tag";
+
 import { StopwatchState } from "../types";
 import { useStopwatch } from "../hooks/useStopwatch"
 import { getStringElapsedTime } from "../lib/dateParsing"
@@ -30,7 +33,6 @@ export default function Stopwatch() {
 
     function handleTagInput(e: React.FormEvent<HTMLInputElement>) {
         dispatch(tagAdded({ tag: e.currentTarget.value }))
-
     }
 
     return (
@@ -41,7 +43,7 @@ export default function Stopwatch() {
                     <button className="stopwatch-button stopwatch-button-start" onClick={handleStart}>start</button>
                     <button className="stopwatch-button stopwatch-button-stop" onClick={handleStop}>stop</button>
                 </div>
-            <input className="stopwatch-input-tag" onChange={handleTagInput} value={stopwatch.tag} placeholder="tag" />
+                <Tag/>
             </div>
         </div>
     );
