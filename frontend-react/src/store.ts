@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
-import { timerReducer } from "features/timer-view";
 import { useDispatch } from "react-redux";
-import { printDateComponent } from './features/stopwatch-view';
-import { StopwatchType, StopwatchState } from "./features/stopwatch-view";
+
 import { PersistedData } from "types";
 import { getPersistedDays } from "lib/localstorage";
+
+import { StopwatchType, StopwatchState, printDateComponent } from "features/stopwatch-view";
+import { timerReducer } from "features/timer-view";
+import { tagsReducer, loadTagsFromLocalStorage, tagsStorageToState } from "features/tag";
 
 
 const todaysDate: string = printDateComponent(new Date().getTime());
@@ -35,6 +37,7 @@ const appReducer = combineReducers({
     stopwatch: stopwatchReducer,
     records: recordsReducer,
     timer: timerReducer,
+    tags: tagsReducer,
 })
 
 const rootReducer: typeof appReducer = (state, action): RootState => {
@@ -62,6 +65,14 @@ window.addEventListener("storage", (e: StorageEvent) => {
         const data = localStorage.getItem(todaysDate) || "{}";
         const todaysData = JSON.parse(data);
         store.dispatch({ type: "CONCURRENT_UPDATE", payload: todaysData })
+    }
+})
+
+window.addEventListener("storage", (e: StorageEvent) => {
+    if (e.key === "tags") {
+        const tagsStorage = loadTagsFromLocalStorage();
+        const tagsState = tagsStorageToState(tagsStorage);
+        store.dispatch({ "type": "concurrent/tags", "payload": tagsState });
     }
 })
 

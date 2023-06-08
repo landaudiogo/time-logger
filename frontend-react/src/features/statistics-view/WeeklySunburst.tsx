@@ -32,7 +32,6 @@ export default function WeeklySunburst() {
         }
         const target = e.target as HTMLInputElement;
         if (validateDateInput(target.value)) {
-            console.log("---2---")
             setDay(new Date(target.value));
         }
     }

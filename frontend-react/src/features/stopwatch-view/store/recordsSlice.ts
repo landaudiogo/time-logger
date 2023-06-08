@@ -1,8 +1,10 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "store";
+
+import { RootState, AppDispatch } from "store";
+import { uuid } from "lib";
+import { addTag } from "features/tag";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
 import { LapRecord, StopwatchType } from "../types";
-import { uuid } from "lib";
 
 
 type RecordsType = {
@@ -85,18 +87,27 @@ const recordsSlice = createSlice({
 
 const selectRecords = (state: RootState): RecordsType => state.records;
 
-
 function addRecord() {
-    return (dispatch: Dispatch, getState: () => RootState) => {
+
+    return (dispatch: AppDispatch, getState: () => RootState) => {
         const stopwatch = selectStopwatch(getState());
         dispatch(recordAdded(stopwatch));
         dispatch(stopwatchInitialized({}));
+        dispatch(addTag(stopwatch.tag));
+    }
+}
+
+export function modifyRecord(record: RecordType) {
+
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        dispatch(addTag(record.tag));
+        dispatch(recordsSlice.actions.modifyRecord(record));
     }
 }
 
 export { selectRecords };
 export default recordsSlice.reducer;
 export const { 
-    recordAdded, manualRecordAdded, modifyRecord, deleteRecord
+    recordAdded, manualRecordAdded, deleteRecord
 } = recordsSlice.actions;
 export { addRecord }; 

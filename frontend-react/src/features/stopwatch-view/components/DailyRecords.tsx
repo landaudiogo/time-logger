@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import "./styles.css";
+import { AppDispatch } from "store";
 
 
 type tagRecordEntryProps = {
@@ -30,7 +31,7 @@ function validateTimeInput(timeString: string) {
 }
 
 function TagRecordEntry(props: tagRecordEntryProps) {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const [editingTag, setEditingTag] = useState<boolean>(false);
     const [editingStartTime, setEditingStartTime] = useState<boolean>(false);
     const [editingEndTime, setEditingEndTime] = useState<boolean>(false);
