@@ -1,6 +1,7 @@
-import StopwatchView from "./components/StopwatchView"
-import DailyRecords from "./components/DailyRecords"
-import { LapRecord, StopwatchState } from "./types/stopwatch"
+import StopwatchView from "./components/StopwatchView";
+import DailyRecords from "./components/DailyRecords";
+import { StopwatchState } from "./types/stopwatch"
+import { LapRecord } from "./types/records";
 import { printTimeComponent, printDateComponent, validateDateInput } from "./lib/dateParsing";
 import { useStopwatch } from "./hooks/useStopwatch";
 import { 

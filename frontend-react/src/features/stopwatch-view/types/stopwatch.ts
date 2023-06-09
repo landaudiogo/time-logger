@@ -20,12 +20,3 @@ export const StopwatchStorageIO = t.type({
     version: t.string,
 });
 export type StopwatchStorage = t.TypeOf<typeof StopwatchStorageIO>;
-
-
-export type LapRecord = {
-    id: string,
-    startTime: number, 
-    endTime: number,
-    tag: string,
-}
-

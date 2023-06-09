@@ -3,8 +3,11 @@ import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppDispatch } from "store";
 import { uuid } from "lib";
 import { addTag } from "features/tag";
+
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
-import { LapRecord, Stopwatch } from "../types/stopwatch";
+import { Stopwatch } from "../types/stopwatch";
+import { LapRecord, Records } from "../types/records";
+import { loadRecordsFromLocalStorage, recordsStorageToState } from "../lib/storage";
 
 
 type RecordsType = {
@@ -20,28 +23,28 @@ type RecordType = {
     tag: string,
 }
 
-type ManualRecordType = { 
-    startTime: number, 
-    endTime: number, 
+type ManualRecordType = {
+    startTime: number,
+    endTime: number,
     tag: string
 }
 
-type DeleteRecordAction = { 
+type DeleteRecordAction = {
     id: string,
 }
 
-const initialState: RecordsType = {
-    records: {}
-}
+const storageObject = loadRecordsFromLocalStorage(new Date());
+console.log(storageObject);
+const initialState = recordsStorageToState(storageObject);
 
 const recordsSlice = createSlice({
     name: "records",
     initialState,
     reducers: {
         recordAdded: {
-            reducer(state, action: PayloadAction<RecordType>) {
+            reducer(records, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
-                state.records[payload.id] = action.payload;
+                records[payload.id] = action.payload;
             },
             prepare: (stopwatch: Stopwatch) => {
                 if (!stopwatch.startTime || !stopwatch.endTime) {
@@ -60,10 +63,10 @@ const recordsSlice = createSlice({
             },
         },
         manualRecordAdded: {
-            reducer(state, action: PayloadAction<RecordType>) {
+            reducer(records, action: PayloadAction<RecordType>) {
                 const payload = action.payload;
-                state.records[payload.id] = action.payload;
-            }, 
+                records[payload.id] = action.payload;
+            },
             prepare: (manualRecord: ManualRecordType) => {
                 const ret = {
                     payload: {
@@ -75,19 +78,19 @@ const recordsSlice = createSlice({
                 return ret;
             }
         },
-        modifyRecord(state, action: PayloadAction<RecordType>) {
-            state.records[action.payload.id] = {
+        modifyRecord(records, action: PayloadAction<RecordType>) {
+            records[action.payload.id] = {
                 ...action.payload,
                 tag: action.payload.tag.trim(),
             };
         },
-        deleteRecord(state, action: PayloadAction<DeleteRecordAction>) {
-            delete state.records[action.payload.id];
+        deleteRecord(records, action: PayloadAction<DeleteRecordAction>) {
+            delete records[action.payload.id];
         }
     }
 });
 
-const selectRecords = (state: RootState): RecordsType => state.records;
+const selectRecords = (state: RootState): Records => state.records;
 
 function addRecord() {
 
@@ -109,7 +112,7 @@ export function modifyRecord(record: RecordType) {
 
 export { selectRecords };
 export default recordsSlice.reducer;
-export const { 
+export const {
     recordAdded, manualRecordAdded, deleteRecord
 } = recordsSlice.actions;
 export { addRecord }; 

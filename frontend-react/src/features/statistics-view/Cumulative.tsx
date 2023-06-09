@@ -84,7 +84,7 @@ export default function Cumulative() {
     const stateRecords = useSelector(selectRecords);
     const uid = uuid();
 
-    const tagRecords = Object.values(stateRecords.records).reduce(
+    const tagRecords = Object.values(stateRecords).reduce(
         (acc, record) => {
             if (acc[record.tag] === undefined) {
                 acc[record.tag] = [];
@@ -94,7 +94,7 @@ export default function Cumulative() {
         },
         {} as { [key: string]: Array<LapRecord> }
     )
-    tagRecords[`total_${uid}`] = [...Object.values(stateRecords.records)];
+    tagRecords[`total_${uid}`] = [...Object.values(stateRecords)];
 
     const tagDataPoints = Object.entries(tagRecords).reduce(
         (acc, [tag, records]) => {

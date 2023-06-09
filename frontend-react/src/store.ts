@@ -14,7 +14,6 @@ import { loadStopwatchFromLocalStorage, stopwatchStorageToState } from "./featur
 
 const todaysDate: string = printDateComponent(new Date().getTime());
 
-
 const storedDates = getPersistedDays().map(key => new Date(key));
 storedDates.sort((a, b) => ((a < b) ? 1 : -1));
 

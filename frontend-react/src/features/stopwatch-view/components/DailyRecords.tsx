@@ -3,7 +3,7 @@ import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
-import { LapRecord } from "../types/stopwatch";
+import { LapRecord } from "../types/records";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -231,7 +231,7 @@ export default function DailyRecords() {
 
     const tagRecords: TagRecords = {};
     var totalTime = 0;
-    for (const lapRecord of Object.values(stateRecords.records)) {
+    for (const lapRecord of Object.values(stateRecords)) {
         if (tagRecords[lapRecord.tag] === undefined) {
             tagRecords[lapRecord.tag] = [];
         }
