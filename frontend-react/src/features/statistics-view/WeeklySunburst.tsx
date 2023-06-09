@@ -3,9 +3,11 @@ import { LapRecord } from "../stopwatch-view";
 import Plot from 'react-plotly.js';
 import "./styles.css";
 import { getPersistedDays } from "lib/localstorage";
-import { printDateComponent } from "features/stopwatch-view";
 import { uuid } from "lib";
-import { validateDateInput } from "features/stopwatch-view";
+import { 
+    validateDateInput, printDateComponent,
+    loadRecordsFromLocalStorage, recordsStorageToState,
+} from "features/stopwatch-view";
 
 
 export default function WeeklySunburst() {
@@ -49,10 +51,8 @@ export default function WeeklySunburst() {
     var records: LapRecord[] = [];
 
     for (const day of sinceMonday) {
-        const storageKey = printDateComponent(day.getTime());
-        const storageValue = localStorage.getItem(storageKey) || "";
-        const parsedValue = JSON.parse(storageValue);
-        const dayRecords: LapRecord[] = Object.values(parsedValue.records?.records);
+        const storageObject = loadRecordsFromLocalStorage(day);
+        const dayRecords = Object.values(recordsStorageToState(storageObject));
         records = [...records, ...dayRecords];
     }
 

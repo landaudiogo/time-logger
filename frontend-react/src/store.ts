@@ -2,20 +2,15 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
 import { useDispatch } from "react-redux";
 
-import { getPersistedDays } from "lib/localstorage";
-
 import { printDateComponent } from "features/stopwatch-view";
 import { timerReducer } from "features/timer-view";
 import { 
     tagsReducer, loadTagsFromLocalStorage, tagsStorageToState
 } from "features/tag";
-import { loadStopwatchFromLocalStorage, stopwatchStorageToState } from "./features/stopwatch-view/lib/storage";
-
-
-const todaysDate: string = printDateComponent(new Date().getTime());
-
-const storedDates = getPersistedDays().map(key => new Date(key));
-storedDates.sort((a, b) => ((a < b) ? 1 : -1));
+import { 
+    loadStopwatchFromLocalStorage, stopwatchStorageToState,
+    loadRecordsFromLocalStorage, recordsStorageToState
+} from "./features/stopwatch-view";
 
 
 const appReducer = combineReducers({
@@ -25,22 +20,13 @@ const appReducer = combineReducers({
     tags: tagsReducer,
 })
 
-const rootReducer: typeof appReducer = (state, action): RootState => {
-    if (action.type === "CONCURRENT_UPDATE") {
-        if (JSON.stringify(state) !== JSON.stringify(action.payload)) {
-            console.log(action.type);
-            return appReducer(action.payload, action)
-        }
-        return appReducer(state, action);
-    }
-    return appReducer(state, action);
-}
-
 const store = configureStore({
-    reducer: rootReducer,
+    reducer: appReducer,
 })
 
 window.addEventListener("storage", (e: StorageEvent) => {
+    const today = new Date();
+    const todaysDateComponent = printDateComponent(today.getTime());
     if (e.key === "tags") {
         const tagsStorage = loadTagsFromLocalStorage();
         const tagsState = tagsStorageToState(tagsStorage);
@@ -49,6 +35,10 @@ window.addEventListener("storage", (e: StorageEvent) => {
         const stopwatchStorage = loadStopwatchFromLocalStorage();
         const stopwatchState = stopwatchStorageToState(stopwatchStorage);
         store.dispatch({ "type": "concurrent/stopwatch", "payload": stopwatchState});
+    } else if (e.key === todaysDateComponent) {
+        const recordsStorage = loadRecordsFromLocalStorage(today);
+        const recordsState = recordsStorageToState(recordsStorage);
+        store.dispatch({ "type": "concurrent/records", "payload": recordsState});
     }
 })
 

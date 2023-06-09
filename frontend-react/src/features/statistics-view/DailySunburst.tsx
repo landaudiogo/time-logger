@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
-import { LapRecord } from "../stopwatch-view";
 import Plot from 'react-plotly.js';
 import "./styles.css";
-import { printDateComponent } from "features/stopwatch-view";
 import { uuid } from "lib";
-import { validateDateInput } from "features/stopwatch-view";
+import { 
+    validateDateInput, printDateComponent, 
+    loadRecordsFromLocalStorage, recordsStorageToState,
+} from "features/stopwatch-view";
+
 
 
 export default function DailySunburst() {
@@ -25,13 +27,8 @@ export default function DailySunburst() {
         }
     }
 
-    const storageKey = printDateComponent(offsetDay.getTime());
-    const storageValue = localStorage.getItem(storageKey) || null;
-    var records: LapRecord[] = [];
-    if (storageValue !== null) {
-        const parsedValue = JSON.parse(storageValue);
-        records = Object.values(parsedValue.records?.records);
-    }
+    const storageObject = loadRecordsFromLocalStorage(day);
+    const records = Object.values(recordsStorageToState(storageObject));
 
     const tagLevelCumulative = {} as { [key: number]: { [key: string]: number } };
     for (const record of Object.values(records)) {
@@ -48,6 +45,7 @@ export default function DailySunburst() {
             tagLevelCumulative[i][tagString] += Math.round(tmpVal * 100) / 100;
         }
     }
+
     const data = [{
         "type": "sunburst" as const,
         "ids": [] as string[],

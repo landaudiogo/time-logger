@@ -46,7 +46,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         dispatch(modifyRecord(newRecord));
         setEditingTag(false);
     }
-function tagHandleKeyDown(e: React.KeyboardEvent) {
+    function tagHandleKeyDown(e: React.KeyboardEvent) {
         if (e.key !== "Enter") 
             return;
         const target = e.target as HTMLInputElement;
@@ -110,7 +110,7 @@ function tagHandleKeyDown(e: React.KeyboardEvent) {
     }
 
     function handleDelete() {
-        dispatch(deleteRecord({ id: lapRecord.id }));
+        dispatch(deleteRecord(lapRecord.id));
     }
 
     return (
@@ -227,7 +227,7 @@ type TagRecords = {
 
 export default function DailyRecords() {
     const stateRecords = useSelector(selectRecords);
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     const tagRecords: TagRecords = {};
     var totalTime = 0;
