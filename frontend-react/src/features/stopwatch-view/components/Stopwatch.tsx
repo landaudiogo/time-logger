@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { Tag } from "features/tag";
 
-import { StopwatchState } from "../types";
+import { StopwatchState } from "../types/stopwatch";
 import { useStopwatch } from "../hooks/useStopwatch"
 import { getStringElapsedTime } from "../lib/dateParsing"
 import { AppDispatch } from "store";

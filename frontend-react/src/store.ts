@@ -9,6 +9,7 @@ import { timerReducer } from "features/timer-view";
 import { 
     tagsReducer, loadTagsFromLocalStorage, tagsStorageToState
 } from "features/tag";
+import { loadStopwatchFromLocalStorage, stopwatchStorageToState } from "./features/stopwatch-view/lib/storage";
 
 
 const todaysDate: string = printDateComponent(new Date().getTime());
@@ -46,7 +47,9 @@ window.addEventListener("storage", (e: StorageEvent) => {
         const tagsState = tagsStorageToState(tagsStorage);
         store.dispatch({ "type": "concurrent/tags", "payload": tagsState });
     } else if (e.key === "stopwatch") {
-        store.dispatch({ "type": "concurrent/stopwatch", "payload": {} });
+        const stopwatchStorage = loadStopwatchFromLocalStorage();
+        const stopwatchState = stopwatchStorageToState(stopwatchStorage);
+        store.dispatch({ "type": "concurrent/stopwatch", "payload": stopwatchState});
     }
 })
 

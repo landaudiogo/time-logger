@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from "store";
 import { uuid } from "lib";
 import { addTag } from "features/tag";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
-import { LapRecord, Stopwatch } from "../types";
+import { LapRecord, Stopwatch } from "../types/stopwatch";
 
 
 type RecordsType = {

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {AppDispatch} from "store";
 
 import { selectStopwatch, stopwatchStarted, stopwatchStopped } from "../store";
-import { Stopwatch, StopwatchState } from "../types";
+import { Stopwatch, StopwatchState } from "../types/stopwatch";
 
 
 export function useStopwatch() {

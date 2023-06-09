@@ -4,19 +4,11 @@ import {
     loadStopwatchFromLocalStorage, stopwatchToLocalStorage, 
     stopwatchStorageToState,
 } from "../lib/storage";
-import { StopwatchState, Stopwatch } from "../types";
+import { StopwatchState, Stopwatch } from "../types/stopwatch";
 
-
-const defaultState: Stopwatch = {
-    state: StopwatchState.Initialized,
-    startTime: null,
-    endTime: null,
-    tag: "",
-};
 
 const storageObject = loadStopwatchFromLocalStorage();
 let initialState = stopwatchStorageToState(storageObject);
-initialState = initialState !== null ? initialState : defaultState;
 
 
 type TagAddedType = {
@@ -43,11 +35,20 @@ const stopwatchSlice = createSlice({
 
         },
         tagAdded(stopwatch, action: PayloadAction<TagAddedType>) {
-            stopwatch.tag = action.payload.tag.trim();
+            stopwatch.tag = action.payload.tag;
         }
 
     }
 });
+
+const stopwatchReducer = stopwatchSlice.reducer;
+const stopwatchRootReducer: typeof stopwatchReducer = (state, action) => {
+    if (action.type === "concurrent/stopwatch") {
+        console.log(action.type);
+        return stopwatchReducer(action.payload, action);
+    }
+    return stopwatchReducer(state, action);
+}
 
 const selectStopwatch = (state: RootState): Stopwatch => state.stopwatch;
 
@@ -92,4 +93,4 @@ export function stopwatchStopped(payload: {}) {
 }
 
 export { selectStopwatch };
-export default stopwatchSlice.reducer;
+export default stopwatchRootReducer;

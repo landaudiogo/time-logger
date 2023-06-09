@@ -67,6 +67,7 @@ export default function Tag() {
         options: { label: string }[],
         { inputValue }: { inputValue: string }
     ) {
+        inputValue = inputValue.trim();
         const filtered = options.filter(option => option.label.includes(inputValue));
         return filtered.length === 0 ?
             [{ label: uid }] :

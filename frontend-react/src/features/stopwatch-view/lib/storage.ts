@@ -4,10 +4,17 @@ import {
     StopwatchStorageIO, StopwatchStorage,
     StopwatchIO, Stopwatch, 
     StopwatchState,
-} from "../types";
+} from "../types/stopwatch";
 
 
 const stopwatchStorageKey = "stopwatch";
+
+const defaultStopwatch: Stopwatch = {
+    state: StopwatchState.Initialized,
+    startTime: null,
+    endTime: null,
+    tag: "",
+};
 
 
 export function loadStopwatchFromLocalStorage(): StopwatchStorage | null {
@@ -38,6 +45,9 @@ export function stopwatchToLocalStorage(stopwatch: Stopwatch) {
     localStorage.setItem(stopwatchStorageKey, JSON.stringify(stopwatchStorage));
 }
 
-export function stopwatchStorageToState(stopwatchStorage: StopwatchStorage | null): Stopwatch | null {
-    return stopwatchStorage === null ? null : stopwatchStorage.stopwatch;
+export function stopwatchStorageToState(
+    stopwatchStorage: StopwatchStorage | null, 
+    defaultValue: Stopwatch = defaultStopwatch
+): Stopwatch {
+    return stopwatchStorage === null ? defaultStopwatch : stopwatchStorage.stopwatch;
 }

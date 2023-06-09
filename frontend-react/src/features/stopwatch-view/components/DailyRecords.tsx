@@ -3,7 +3,7 @@ import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
-import { LapRecord } from "../types";
+import { LapRecord } from "../types/stopwatch";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
