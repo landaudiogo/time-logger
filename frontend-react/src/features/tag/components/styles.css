@@ -23,9 +23,13 @@
 }
 
 .tag-option { 
-    width: 15ch;
+    width: 90%;
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     display: block;
 }
+
+.tag-container .MuiAutocomplete-popper {
+    width: 220px !important;
+} 

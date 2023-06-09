@@ -105,28 +105,30 @@ export default function Tag() {
     }
 
     return (
-        <Autocomplete
-            className="tag-input"
-            size="small"
-            disablePortal
-            autoHighlight={true}
-            freeSolo={true}
-            selectOnFocus={true}
-            options={tagOptions}
-            inputValue={inputValue}
-            onInputChange={handleInputChange}
-            onChange={handleChange}
-            renderInput={(params) => <TextField {...params} label="tag" />}
-            renderOption={renderOption}
-            filterOptions={customFilter}
-            isOptionEqualToValue={
-                (option, value) => {
-                    if (value.label === uid) {
-                        return true
+        <div className="tag-container">
+            <Autocomplete
+                className="tag-input"
+                size="small"
+                disablePortal
+                autoHighlight={true}
+                freeSolo={true}
+                selectOnFocus={true}
+                options={tagOptions}
+                inputValue={inputValue}
+                onInputChange={handleInputChange}
+                onChange={handleChange}
+                renderInput={(params) => <TextField {...params} label="tag" />}
+                renderOption={renderOption}
+                filterOptions={customFilter}
+                isOptionEqualToValue={
+                    (option, value) => {
+                        if (value.label === uid) {
+                            return true
+                        }
+                        return option.label === value.label
                     }
-                    return option.label === value.label
                 }
-            }
-        />
+            />
+        </div>
     )
 }
