@@ -7,6 +7,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { AppDispatch } from "store";
 import { uuid } from "lib";
+import { tagAdded, selectStopwatch } from "features/stopwatch-view";
+
 
 import { selectTags, addTag, deleteTag } from "../store/tagsSlice";
 import { TagT } from "../types";
@@ -17,7 +19,7 @@ const uid = uuid();
 
 export default function Tag() {
     const dispatch: AppDispatch = useDispatch();
-    const [inputValue, setInputValue] = useState<string>("");
+    const inputValue = useSelector(selectStopwatch).tag;
     const inputValueRef = useRef<string>(inputValue);
     inputValueRef.current = inputValue;
     const tags = useSelector(selectTags);
@@ -31,11 +33,19 @@ export default function Tag() {
         dispatch(deleteTag(tagString));
     }
 
-    function handleChange(
-        event: React.SyntheticEvent<Element, Event>, 
-        newValue: { label: string } | string | null
+    function handleInputChange(
+        event: React.SyntheticEvent<Element, Event>,
+        newInputValue: string
+    )  {
+        if (newInputValue !== uid) {
+            dispatch(tagAdded({tag: newInputValue}));
+        }
+    }
 
-    ) { 
+    function handleChange(
+        event: React.SyntheticEvent<Element, Event>,
+        newValue: { label: string } | string | null
+    ) {
         if (newValue === null) {
             return
         }
@@ -50,12 +60,11 @@ export default function Tag() {
             value = inputValueRef.current;
         }
         value = value.trim();
-        setInputValue(value);
-
+        dispatch(tagAdded({tag: value}));
     }
 
     function customFilter(
-        options: { label: string }[], 
+        options: { label: string }[],
         { inputValue }: { inputValue: string }
     ) {
         const filtered = options.filter(option => option.label.includes(inputValue));
@@ -65,7 +74,7 @@ export default function Tag() {
     }
 
     function renderOption(
-        props: React.HTMLAttributes<HTMLLIElement>, 
+        props: React.HTMLAttributes<HTMLLIElement>,
         option: { label: string }
     ) {
         if (option.label === uid) {
@@ -104,13 +113,7 @@ export default function Tag() {
             selectOnFocus={true}
             options={tagOptions}
             inputValue={inputValue}
-            onInputChange={
-                (event, newInputValue) => {
-                    if (newInputValue !== uid) {
-                        setInputValue(newInputValue)
-                    }
-                }
-            }
+            onInputChange={handleInputChange}
             onChange={handleChange}
             renderInput={(params) => <TextField {...params} label="tag" />}
             renderOption={renderOption}
