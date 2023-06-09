@@ -7,6 +7,8 @@
 .tag-input input {
     background-color: var(--neutral-6);
     box-shadow: none;
+    overflow-x: scroll;
+    text-overflow: clip !important;
 }
 .tag-input input:focus {
     background-color: var(--neutral-6);

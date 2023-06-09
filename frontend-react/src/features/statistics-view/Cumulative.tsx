@@ -55,7 +55,7 @@ export const options = {
     scales: {
         x: {
             type: "time" as const,
-            //min: 0,
+            min: 0,
             ticks: {
                 stepSize: 60,
                 color: "hsl(206, 44%, 22%)",
@@ -84,16 +84,25 @@ export default function Cumulative() {
     const stateRecords = useSelector(selectRecords);
     const uid = uuid();
 
+    let xMin: null | number = null;
     const tagRecords = Object.values(stateRecords).reduce(
         (acc, record) => {
             if (acc[record.tag] === undefined) {
                 acc[record.tag] = [];
+            }
+            if (xMin === null || xMin > record.startTime) {
+                const start = new Date(record.startTime);
+                start.setMinutes(0);
+                xMin = start.getTime();
             }
             acc[record.tag].push({...record});
             return acc;
         },
         {} as { [key: string]: Array<LapRecord> }
     )
+    const today = new Date();
+    today.setMinutes(0);
+    options.scales.x.min = xMin !== null ? xMin : today.getTime();
     tagRecords[`total_${uid}`] = [...Object.values(stateRecords)];
 
     const tagDataPoints = Object.entries(tagRecords).reduce(
