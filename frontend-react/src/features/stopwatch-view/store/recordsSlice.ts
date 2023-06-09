@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from "store";
 import { uuid } from "lib";
 import { addTag } from "features/tag";
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
-import { LapRecord, StopwatchType } from "../types";
+import { LapRecord, Stopwatch } from "../types";
 
 
 type RecordsType = {
@@ -43,9 +43,11 @@ const recordsSlice = createSlice({
                 const payload = action.payload;
                 state.records[payload.id] = action.payload;
             },
-            prepare: (stopwatch: StopwatchType) => {
-                if (!stopwatch.startTime || !stopwatch.endTime)
+            prepare: (stopwatch: Stopwatch) => {
+                if (!stopwatch.startTime || !stopwatch.endTime) {
+                    console.log(stopwatch);
                     throw new Error("Stopwatch is not populated");
+                }
                 const ret = {
                     payload: {
                         startTime: stopwatch.startTime,

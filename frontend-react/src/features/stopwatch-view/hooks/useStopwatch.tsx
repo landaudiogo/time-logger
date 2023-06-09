@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
+import {AppDispatch} from "store";
+
 import { selectStopwatch, stopwatchStarted, stopwatchStopped } from "../store";
-import { StopwatchType, StopwatchState } from "../types";
+import { Stopwatch, StopwatchState } from "../types";
+
 
 export function useStopwatch() {
     const stopwatch = useSelector(selectStopwatch);
-    const stopwatchRef = useRef<StopwatchType>(stopwatch);
+    const stopwatchRef = useRef<Stopwatch>(stopwatch);
     stopwatchRef.current = stopwatch;
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const intervalRef = useRef<NodeJS.Timer | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
 
