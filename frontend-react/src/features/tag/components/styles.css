@@ -11,3 +11,21 @@
 .tag-input input:focus {
     background-color: var(--neutral-6);
 }
+
+.tag-no-labels { 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    color: var(--neutral-3);
+}
+.tag-no-labels:hover { 
+    background-color: inherit;
+}
+
+.tag-option { 
+    width: 15ch;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}

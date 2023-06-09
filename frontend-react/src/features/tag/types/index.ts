@@ -3,7 +3,7 @@ import * as t from "io-ts";
 const TagIO = t.type({
     tagString: t.string
 });
-export type Tag = t.TypeOf<typeof TagIO>;
+export type TagT = t.TypeOf<typeof TagIO>;
 
 export const TagsStorageV1 = t.type({
     tags: t.array(TagIO),

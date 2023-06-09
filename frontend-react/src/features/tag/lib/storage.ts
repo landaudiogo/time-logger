@@ -1,4 +1,4 @@
-import { Tag, TagsStorageV1, TagsStorageV1T } from "../types";
+import { TagT, TagsStorageV1, TagsStorageV1T } from "../types";
 import { isLeft } from "fp-ts/Either";
 
 export function loadTagsFromLocalStorage(): TagsStorageV1T | null {
@@ -21,7 +21,7 @@ export function loadTagsFromLocalStorage(): TagsStorageV1T | null {
     return decodedTagsStorage;
 }
 
-export function saveTagsToLocalStorage(tags: {[key: string]: Tag}) { 
+export function saveTagsToLocalStorage(tags: {[key: string]: TagT}) { 
     const tagsStorage = {
         tags: Object.values(tags), 
         version: "v1",
@@ -38,6 +38,6 @@ export function tagsStorageToState(tagsStorage: TagsStorageV1T | null) {
             acc[tag.tagString] = tag;
             return acc
         },
-        {} as { [key: string]: Tag }
+        {} as { [key: string]: TagT }
     );
 }

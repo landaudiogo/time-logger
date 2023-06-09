@@ -1,5 +1,5 @@
-import { Tag } from "./"
+import { TagT } from "./"
 
 export type TagsStore = {
-    [key: string]: Tag,
+    [key: string]: TagT,
 }
