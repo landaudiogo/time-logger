@@ -1,13 +1,14 @@
-import { RootState } from "store";
+import { RootState, AppDispatch } from "store";
 import { createSlice } from "@reduxjs/toolkit";
 
-type TimerType = {
-    duration: number;
-}
+import { TimerT } from "../types";
+import { 
+    loadTimerFromLocalStorage, timerToLocalStorage, timerStorageToState 
+} from "../lib/storage";
 
-const initialState: TimerType = {
-    duration: 1000*60*25,
-}
+
+const timerStorage = loadTimerFromLocalStorage();
+const initialState = timerStorageToState(timerStorage);
 
 const timerSlice = createSlice({
     name: "timer",
@@ -19,9 +20,18 @@ const timerSlice = createSlice({
     }
 });
 
-const selectTimer = (state: RootState): TimerType => state.timer;
+const selectTimer = (state: RootState): TimerT => state.timer;
+
+export function timerDurationAdded(payload: {duration: number}) { 
+    
+    return (dispatch: AppDispatch, getState: () => RootState) => {
+        dispatch(timerSlice.actions.timerDurationAdded(payload))
+        const timer = selectTimer(getState());
+        timerToLocalStorage(timer);
+    }
+}
+
 
 export default timerSlice.reducer;
 
-export const { timerDurationAdded } = timerSlice.actions;
 export { selectTimer };
