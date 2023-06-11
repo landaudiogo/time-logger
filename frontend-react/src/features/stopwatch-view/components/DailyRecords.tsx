@@ -236,7 +236,7 @@ export default function DailyRecords(props: DailyRecordsProps) {
 
     const stateRecords: Records = {};
     for (const record of Object.values(records)) { 
-        if ((record.startTime > day.getTime()) 
+        if ((record.startTime >= day.getTime()) 
             && (record.startTime < (day.getTime() + 1000*60*60*24))
         ) {
             stateRecords[record.id] = record;
@@ -255,8 +255,8 @@ export default function DailyRecords(props: DailyRecordsProps) {
 
     function handleAdd() {
         dispatch(manualRecordAdded({
-            startTime: new Date().getTime(),
-            endTime: new Date().getTime(),
+            startTime: day.getTime(),
+            endTime: day.getTime()+1000*60*10,
             tag: ""
         }))
     }
