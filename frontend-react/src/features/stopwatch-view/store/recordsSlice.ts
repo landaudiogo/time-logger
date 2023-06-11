@@ -35,6 +35,9 @@ type ManualRecordType = {
 type DeleteRecordAction = {
     id: string,
 }
+type RecordsAddedAction = {
+    records: Records
+}
 
 const storageObject = loadRecordsFromLocalStorage(new Date());
 const initialState = recordsStorageToState(storageObject);
@@ -59,6 +62,11 @@ const recordsSlice = createSlice({
         },
         deleteRecord(records, action: PayloadAction<DeleteRecordAction>) {
             delete records[action.payload.id];
+        },
+        recordsAdded(records, action: PayloadAction<RecordsAddedAction>) {
+            for (const record of Object.values(action.payload.records)) {
+                records[record.id] = record;
+            }
         }
     }
 });
@@ -149,4 +157,5 @@ export function deleteRecord(id: string) {
 }
 
 export { selectRecords };
+export const { recordsAdded } = recordsSlice.actions;
 export default recordsRootReducer;

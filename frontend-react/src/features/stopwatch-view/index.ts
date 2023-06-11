@@ -11,6 +11,7 @@ import {
 } from "./lib/storage";
 
 import { useStopwatch } from "./hooks/useStopwatch";
+import { recordsAdded } from "./store/recordsSlice";
 import {
     tagAdded, stopwatchReducer, selectStopwatch,
     recordsReducer, selectRecords
@@ -18,7 +19,8 @@ import {
 
 export {
     DailyRecords, printTimeComponent, printDateComponent, useStopwatch, StopwatchState,
-    stopwatchReducer, recordsReducer, selectRecords, validateDateInput, tagAdded, selectStopwatch
+    stopwatchReducer, recordsReducer, selectRecords, validateDateInput, tagAdded, selectStopwatch, 
+    recordsAdded
 };
 
 export { 

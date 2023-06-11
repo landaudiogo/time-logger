@@ -3,7 +3,7 @@ import { printTimeComponent } from "../lib/dateParsing"
 import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
-import { LapRecord } from "../types/records";
+import { LapRecord, Records } from "../types/records";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -225,9 +225,23 @@ type TagRecords = {
     [key: string]: Array<LapRecord>
 }
 
-export default function DailyRecords() {
-    const stateRecords = useSelector(selectRecords);
+type DailyRecordsProps = {
+    day: Date,
+};
+
+export default function DailyRecords(props: DailyRecordsProps) {
+    const day = props.day;
+    const records = useSelector(selectRecords);
     const dispatch: AppDispatch = useDispatch();
+
+    const stateRecords: Records = {};
+    for (const record of Object.values(records)) { 
+        if ((record.startTime > day.getTime()) 
+            && (record.startTime < (day.getTime() + 1000*60*60*24))
+        ) {
+            stateRecords[record.id] = record;
+        }
+    }
 
     const tagRecords: TagRecords = {};
     var totalTime = 0;
