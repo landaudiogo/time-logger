@@ -1,13 +1,18 @@
 import React, { useState, useRef } from "react";
-import { LapRecord } from "../stopwatch-view";
 import Plot from 'react-plotly.js';
-import "./styles.css";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { getPersistedDays } from "lib/localstorage";
 import { uuid } from "lib";
 import { 
     validateDateInput, printDateComponent,
     loadRecordsFromLocalStorage, recordsStorageToState,
 } from "features/stopwatch-view";
+
+import { LapRecord } from "../stopwatch-view";
+import "./styles.css";
 
 
 export default function WeeklySunburst() {
@@ -130,14 +135,18 @@ export default function WeeklySunburst() {
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
-            <div>
-                <span>Day: </span>
-                <input 
-                    ref={inputRef}
-                    onKeyDown={handleKeyDown}
-                    className="st-sunburst-date-input"
-                    defaultValue={printDateComponent(day.getTime())}
-                />
+            <div className="date-picker-container">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                        label="Pick Day" 
+                        value={day}
+                        onChange={(newValue) => {
+                            if (newValue !== null) {
+                                setDay(newValue);
+                            }
+                        }}
+                    />
+                </LocalizationProvider>
             </div>
         </div>
     );

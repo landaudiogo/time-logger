@@ -54,3 +54,7 @@
     width: 12ch;
     text-align: center;
 }
+
+.date-picker-container input:focus { 
+    background-color: unset;
+}

@@ -1,11 +1,16 @@
 import React, { useState, useRef } from "react";
 import Plot from 'react-plotly.js';
-import "./styles.css";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { uuid } from "lib";
 import { 
     validateDateInput, printDateComponent, 
     loadRecordsFromLocalStorage, recordsStorageToState,
 } from "features/stopwatch-view";
+
+import "./styles.css";
 
 
 
@@ -76,7 +81,6 @@ export default function DailySunburst() {
             data[0].labels.push(tagTree[tagTree.length - 1]);
             data[0].values.push(totalTime);
         }
-
     }
     data[0].labels.push("total");
     data[0].ids.push("total_" + uid);
@@ -109,14 +113,18 @@ export default function DailySunburst() {
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
-            <div>
-                <span>Day: </span>
-                <input
-                    ref={inputRef}
-                    onKeyDown={handleKeyDown}
-                    className="st-sunburst-date-input"
-                    defaultValue={printDateComponent(day.getTime())}
-                />
+            <div className="date-picker-container">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                        label="Pick Day" 
+                        value={day}
+                        onChange={(newValue) => {
+                            if (newValue !== null) {
+                                setDay(newValue);
+                            }
+                        }}
+                    />
+                </LocalizationProvider>
             </div>
         </div>
     );
