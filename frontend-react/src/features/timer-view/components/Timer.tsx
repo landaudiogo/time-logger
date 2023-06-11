@@ -16,9 +16,11 @@ enum TimerUnit {
 
 
 export default function Timer() {
+    console.log("---render timer---");
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
     const dispatch: AppDispatch = useDispatch();
-    const timerDuration = new Date(useSelector(selectTimer).duration);
+    const timerDurationStore = useSelector(selectTimer);
+    const timerDuration = new Date(timerDurationStore.duration);
     const [timerRemaining, setTimerRemaining] = useState<Date>(timerDuration);
     const timerDurationRef = useRef<Date>(timerDuration);
     timerDurationRef.current = timerDuration;
@@ -26,6 +28,7 @@ export default function Timer() {
     const a = new Audio(bell);
 
     useEffect(() => {
+        console.log("---1---")
         if (terminated.current === true){
             return;
         }
@@ -39,7 +42,7 @@ export default function Timer() {
             Math.max(timerDuration.getTime() - elapsedTime, 0)
         );
         setTimerRemaining(remainingTimeDate);
-    }, [elapsedTime, timerDuration])
+    }, [elapsedTime, timerDurationStore]);
 
     useEffect(() => {
         switch (stopwatch.state) {
