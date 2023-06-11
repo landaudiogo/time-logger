@@ -57,7 +57,7 @@ export function stopwatchStorageToState(
     stopwatchStorage: StopwatchStorage | null, 
     defaultValue: Stopwatch = defaultStopwatch
 ): Stopwatch {
-    return stopwatchStorage === null ? defaultValue : stopwatchStorage.stopwatch;
+    return stopwatchStorage === null ? {...defaultValue} : stopwatchStorage.stopwatch;
 }
 
 
@@ -125,7 +125,7 @@ export function recordsStorageToState(
     defaultValue: Records = defaultRecords
 ): Records { 
     if (recordsStorage === null) {
-        return defaultValue;
+        return {...defaultValue};
     }
     return Object.values(recordsStorage.records).reduce(
         (acc, record) => {
