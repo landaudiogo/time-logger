@@ -15,8 +15,12 @@ import { LapRecord } from "../stopwatch-view";
 import "./styles.css";
 
 
-export default function WeeklySunburst() {
-    const [day, setDay] = useState(new Date());
+type WeeklySunburstProps = {
+    day: Date
+}
+
+export default function WeeklySunburst(props: WeeklySunburstProps) {
+    const day = props.day;
     const inputRef = useRef<HTMLInputElement>(null);
     const uid = uuid();
 
@@ -32,16 +36,6 @@ export default function WeeklySunburst() {
         }
     })
     sinceMonday.sort((a, b) => (a > b) ? 1 : -1);
-
-    function handleKeyDown(e: React.KeyboardEvent) { 
-        if (e.key !== "Enter") {
-            return;
-        }
-        const target = e.target as HTMLInputElement;
-        if (validateDateInput(target.value)) {
-            setDay(new Date(target.value));
-        }
-    }
 
     const data = [{
         "type": "sunburst" as const,
@@ -135,19 +129,6 @@ export default function WeeklySunburst() {
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
-            <div className="date-picker-container">
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker 
-                        label="Pick Day" 
-                        value={day}
-                        onChange={(newValue) => {
-                            if (newValue !== null) {
-                                setDay(newValue);
-                            }
-                        }}
-                    />
-                </LocalizationProvider>
-            </div>
         </div>
     );
 }

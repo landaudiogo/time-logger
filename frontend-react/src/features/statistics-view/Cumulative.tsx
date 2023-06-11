@@ -10,14 +10,17 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import { useSelector } from "react-redux";
 
 import { selectRecords } from "features/stopwatch-view";
-import { recordsCumulativeDataPoints } from "./lib/dataProcessing";
-import { LapRecord } from "features/stopwatch-view";
 import { uuid } from "lib";
+import { LapRecord } from "features/stopwatch-view";
+import {
+    loadRecordsFromLocalStorage, recordsStorageToState,
+} from "features/stopwatch-view";
 
-import 'chartjs-adapter-date-fns';
+import { recordsCumulativeDataPoints } from "./lib/dataProcessing";
 import "./styles.css";
 
 
@@ -31,58 +34,64 @@ ChartJS.register(
     Legend,
 );
 
-export const options = {
-    plugins: {
-        legend: {
-            position: "bottom" as const,
-            labels: {
-                font: {
-                    size: 14,
-                },
-                color: "hsl(206, 44%, 22%)",
-            }
-        },
-        title: {
-            display: true,
-            text: "Cumulative Time",
-            color: "hsl(206, 44%, 22%)",
-            font: {
-                size: 24,
-                weight: "normal",
-            }
-        },
-    },
-    scales: {
-        x: {
-            type: "time" as const,
-            min: 0,
-            ticks: {
-                stepSize: 60,
-                color: "hsl(206, 44%, 22%)",
-            },
-            time: {
-                unit: "minute" as const,
-                displayFormats: {
-                    "minute": "HH:mm" as const,
+type CumulativeProps = {
+    day: Date
+}
+
+export default function Cumulative(props: CumulativeProps) {
+    const options = {
+        plugins: {
+            legend: {
+                position: "bottom" as const,
+                labels: {
+                    font: {
+                        size: 14,
+                    },
+                    color: "hsl(206, 44%, 22%)",
                 }
             },
-            grid: {
-                color: "transparent",
-            }
-        },
-        y: {
-            min: 0,
-            ticks: {
-                stepSize: 1,
+            title: {
+                display: true,
+                text: "Cumulative Time",
                 color: "hsl(206, 44%, 22%)",
+                font: {
+                    size: 24,
+                    weight: "normal",
+                }
             },
         },
-    }
-};
-
-export default function Cumulative() {
-    const stateRecords = useSelector(selectRecords);
+        scales: {
+            x: {
+                type: "time" as const,
+                min: 0,
+                ticks: {
+                    stepSize: 60,
+                    color: "hsl(206, 44%, 22%)",
+                },
+                time: {
+                    unit: "minute" as const,
+                    displayFormats: {
+                        "minute": "HH:mm" as const,
+                    }
+                },
+                grid: {
+                    color: "transparent",
+                }
+            },
+            y: {
+                min: 0,
+                ticks: {
+                    stepSize: 1,
+                    color: "hsl(206, 44%, 22%)",
+                },
+            },
+        }
+    };
+    const day = props.day;
     const uid = uuid();
+
+    const storageObject = loadRecordsFromLocalStorage(day);
+    const stateRecords = Object.values(recordsStorageToState(storageObject));
 
     let xMin: null | number = null;
     const tagRecords = Object.values(stateRecords).reduce(
@@ -100,9 +109,7 @@ export default function Cumulative() {
         },
         {} as { [key: string]: Array<LapRecord> }
     )
-    const today = new Date();
-    today.setMinutes(0);
-    options.scales.x.min = xMin !== null ? xMin : today.getTime();
+    options.scales.x.min = xMin !== null ? xMin : day.getTime();
     tagRecords[`total_${uid}`] = [...Object.values(stateRecords)];
 
     const tagDataPoints = Object.entries(tagRecords).reduce(

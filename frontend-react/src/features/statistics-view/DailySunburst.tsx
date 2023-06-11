@@ -13,24 +13,17 @@ import {
 import "./styles.css";
 
 
+type DailySunburstProps = {
+    day: Date
+}
 
-export default function DailySunburst() {
-    const [day, setDay] = useState(new Date());
+export default function DailySunburst(props: DailySunburstProps) {
+    const day = props.day;
     const inputRef = useRef<HTMLInputElement>(null);
     const uid = uuid();
 
     const offsetDay = day;
     offsetDay.setHours(0, 0, 0, 0);
-
-    function handleKeyDown(e: React.KeyboardEvent) {
-        if (e.key !== "Enter") {
-            return;
-        }
-        const target = e.target as HTMLInputElement;
-        if (validateDateInput(target.value)) {
-            setDay(new Date(target.value));
-        }
-    }
 
     const storageObject = loadRecordsFromLocalStorage(day);
     const records = Object.values(recordsStorageToState(storageObject));
@@ -113,19 +106,6 @@ export default function DailySunburst() {
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
-            <div className="date-picker-container">
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker 
-                        label="Pick Day" 
-                        value={day}
-                        onChange={(newValue) => {
-                            if (newValue !== null) {
-                                setDay(newValue);
-                            }
-                        }}
-                    />
-                </LocalizationProvider>
-            </div>
         </div>
     );
 }
