@@ -55,6 +55,16 @@
     text-align: center;
 }
 
+.date-picker-container {
+    margin-top: 32px;
+    background-color: var(--neutral-7);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.date-picker-container .MuiInputBase-root {
+    color: var(--primary-1);
+}
+
 .date-picker-container input:focus { 
     background-color: unset;
 }
