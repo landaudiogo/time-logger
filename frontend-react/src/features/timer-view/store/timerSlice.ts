@@ -20,6 +20,15 @@ const timerSlice = createSlice({
     }
 });
 
+const timerReducer = timerSlice.reducer;
+const timerRootReducer: typeof timerReducer = (state, action) => {
+    if (action.type === "concurrent/timer") {
+        console.log(action.type);
+        return timerReducer(action.payload, action);
+    }
+    return timerReducer(state, action);
+}
+
 const selectTimer = (state: RootState): TimerT => state.timer;
 
 export function timerDurationAdded(payload: {duration: number}) { 
@@ -32,6 +41,6 @@ export function timerDurationAdded(payload: {duration: number}) {
 }
 
 
-export default timerSlice.reducer;
+export default timerRootReducer;
 
 export { selectTimer };

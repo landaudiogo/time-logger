@@ -18,10 +18,8 @@ enum TimerUnit {
 export default function Timer() {
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
     const dispatch: AppDispatch = useDispatch();
-    const timerDurationStore = useSelector(selectTimer);
-    const defaultTimer = new Date(timerDurationStore.duration);
-    const [timerRemaining, setTimerRemaining] = useState<Date>(defaultTimer);
-    const [timerDuration, setTimerDuration] = useState<Date>(defaultTimer);
+    const timerDuration = new Date(useSelector(selectTimer).duration);
+    const [timerRemaining, setTimerRemaining] = useState<Date>(timerDuration);
     const timerDurationRef = useRef<Date>(timerDuration);
     timerDurationRef.current = timerDuration;
     const terminated = useRef<boolean>(false);
@@ -57,10 +55,6 @@ export default function Timer() {
                 break;
         }
     }, [stopwatch])
-
-    useEffect(() => {
-        dispatch(timerDurationAdded({duration: timerDurationRef.current.getTime()}));
-    }, [timerDuration])
 
     function onChangeTimer(timerUnit: TimerUnit) {
         const handleTimerCallback = (e: React.FormEvent<HTMLInputElement>) => {
@@ -101,7 +95,7 @@ export default function Timer() {
             timerDurationRef.current = new Date(timerDurationRef.current);
             timerDurationRef.current.setSeconds(val);
         }
-        setTimerDuration(timerDurationRef.current);
+        dispatch(timerDurationAdded({duration: timerDurationRef.current.getTime()}));
     }
 
     const disabled = stopwatch.state === StopwatchState.Started;

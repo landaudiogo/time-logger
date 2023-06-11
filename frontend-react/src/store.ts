@@ -3,7 +3,9 @@ import { stopwatchReducer, recordsReducer } from "features/stopwatch-view";
 import { useDispatch } from "react-redux";
 
 import { printDateComponent } from "features/stopwatch-view";
-import { timerReducer } from "features/timer-view";
+import { 
+    timerReducer, loadTimerFromLocalStorage, timerStorageToState
+} from "features/timer-view";
 import { 
     tagsReducer, loadTagsFromLocalStorage, tagsStorageToState
 } from "features/tag";
@@ -35,6 +37,10 @@ window.addEventListener("storage", (e: StorageEvent) => {
         const stopwatchStorage = loadStopwatchFromLocalStorage();
         const stopwatchState = stopwatchStorageToState(stopwatchStorage);
         store.dispatch({ "type": "concurrent/stopwatch", "payload": stopwatchState});
+    } else if (e.key === "timer") {
+        const timerStorage = loadTimerFromLocalStorage();
+        const timerState = timerStorageToState(timerStorage);
+        store.dispatch({ "type": "concurrent/timer", "payload": timerState});
     } else if (e.key === todaysDateComponent) {
         const recordsStorage = loadRecordsFromLocalStorage(today);
         const recordsState = recordsStorageToState(recordsStorage);
