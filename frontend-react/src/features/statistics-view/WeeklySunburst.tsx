@@ -31,7 +31,7 @@ export default function WeeklySunburst(props: WeeklySunburstProps) {
 
     const days = getPersistedDays().map((key) => new Date(key));
     const sinceMonday = days.filter((day) => {
-        if (day >= mondayBeforeOffset && day <= mondayAfterOffset) {
+        if (day >= mondayBeforeOffset && day < mondayAfterOffset) {
             return day
         }
     })
