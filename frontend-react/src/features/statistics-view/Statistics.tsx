@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AppDispatch } from "store";
 import { 
     DailyRecords, loadRecordsFromLocalStorage, recordsStorageToState, 
-    recordsAdded
+    recordsAdded, selectRecords
 } from "features/stopwatch-view";
 
 import Cumulative from "./Cumulative";
@@ -20,6 +20,7 @@ export default function Statistics() {
 
     const [day, setDay] = useState(today);
     const dispatch: AppDispatch = useDispatch();
+    const tags = useSelector(selectRecords).tags;
 
     useEffect(() => {
         const storageObject = loadRecordsFromLocalStorage(day);
