@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -7,11 +7,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AppDispatch } from "store";
 import { 
     DailyRecords, loadRecordsFromLocalStorage, recordsStorageToState, 
-    recordsAdded, selectRecords
+    recordsAdded
 } from "features/stopwatch-view";
 
 import Cumulative from "./Cumulative";
 import Sunburst from "./Sunburst";
+import Barplot from "./Barplot";
 
 export default function Statistics() {
     const today = new Date();
@@ -19,7 +20,6 @@ export default function Statistics() {
 
     const [day, setDay] = useState(today);
     const dispatch: AppDispatch = useDispatch();
-    const records = useSelector(selectRecords);
 
     useEffect(() => {
         const storageObject = loadRecordsFromLocalStorage(day);
@@ -43,6 +43,7 @@ export default function Statistics() {
                     />
                 </LocalizationProvider>
             </div>
+            <Barplot day={day}/>
             <Cumulative day={day}/>
             <Sunburst day={day}/>
             <DailyRecords day={day} />

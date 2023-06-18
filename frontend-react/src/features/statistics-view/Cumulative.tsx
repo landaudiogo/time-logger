@@ -11,9 +11,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { useSelector } from "react-redux";
 
-import { selectRecords } from "features/stopwatch-view";
 import { uuid } from "lib";
 import { LapRecord } from "features/stopwatch-view";
 import {

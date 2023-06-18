@@ -17,7 +17,6 @@ type WeeklySunburstProps = {
 
 export default function WeeklySunburst(props: WeeklySunburstProps) {
     const day = props.day;
-    const inputRef = useRef<HTMLInputElement>(null);
     const uid = uuid();
 
     const offsetDay = day;
