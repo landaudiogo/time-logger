@@ -15,30 +15,10 @@ type DailySunburstProps = {
 
 export default function DailySunburst(props: DailySunburstProps) {
     const day = props.day;
-    const inputRef = useRef<HTMLInputElement>(null);
     const uid = uuid();
 
     const offsetDay = day;
     offsetDay.setHours(0, 0, 0, 0);
-
-    const storageObject = loadRecordsFromLocalStorage(day);
-    const records = Object.values(recordsStorageToState(storageObject));
-
-    const tagLevelCumulative = {} as { [key: number]: { [key: string]: number } };
-    for (const record of Object.values(records)) {
-        const tagLevels = record.tag.split("/");
-        for (const [i, level] of tagLevels.entries()) {
-            if (tagLevelCumulative[i] === undefined) {
-                tagLevelCumulative[i] = {};
-            }
-            const tagString = tagLevels.slice(0, i + 1).join("/");
-            if (tagLevelCumulative[i][tagString] === undefined) {
-                tagLevelCumulative[i][tagString] = 0;
-            }
-            const tmpVal = (record.endTime - record.startTime) / (1000 * 60 * 60);
-            tagLevelCumulative[i][tagString] += Math.round(tmpVal * 100) / 100;
-        }
-    }
 
     const data = [{
         "type": "sunburst" as const,
@@ -50,26 +30,40 @@ export default function DailySunburst(props: DailySunburstProps) {
         "marker": { "line": { "width": 2 } },
         "branchvalues": 'total' as const,
     }];
-    const layout1 = {
+    const layout = {
         margin: { l: 4, r: 4, b: 4, t: 4 },
         width: 300, height: 300,
         paper_bgcolor: "hsl(207, 22%, 90%)",
     };
 
-    var tagTotalTime = 0;
-    for (const [level, tagTimes] of Object.entries(tagLevelCumulative)) {
-        for (const [tag, totalTime] of Object.entries(tagTimes)) {
-            const tagTree = tag.split("/");
-            let parent = tagTree.slice(0, tagTree.length - 1).join("/");
-            if (parent === "") {
-                parent = "total_" + uid;
-                tagTotalTime += totalTime;
+    const storageObject = loadRecordsFromLocalStorage(day);
+    const records = Object.values(recordsStorageToState(storageObject));
+
+    const tagLevelCumulative = {} as { [key: string]: number };
+    for (const record of Object.values(records)) {
+        const tagLevels = record.tag.split("/");
+        for (const [i, level] of tagLevels.entries()) {
+            const tagString = tagLevels.slice(0, i + 1).join("/");
+            if (tagLevelCumulative[tagString] === undefined) {
+                tagLevelCumulative[tagString] = 0;
             }
-            data[0].parents.push(parent);
-            data[0].ids.push(tag);
-            data[0].labels.push(tagTree[tagTree.length - 1]);
-            data[0].values.push(totalTime);
+            const tmpVal = (record.endTime - record.startTime) / (1000 * 60 * 60);
+            tagLevelCumulative[tagString] += Math.round(tmpVal * 100) / 100;
         }
+    }
+
+    var tagTotalTime = 0;
+    for (const [tag, totalTime] of Object.entries(tagLevelCumulative)) {
+        const tagTree = tag.split("/");
+        let parent = tagTree.slice(0, tagTree.length - 1).join("/");
+        if (parent === "") {
+            parent = "total_" + uid;
+            tagTotalTime += totalTime;
+        }
+        data[0].parents.push(parent);
+        data[0].ids.push(tag);
+        data[0].labels.push(tagTree[tagTree.length - 1]);
+        data[0].values.push(totalTime);
     }
     data[0].labels.push("total");
     data[0].ids.push("total_" + uid);
@@ -98,7 +92,7 @@ export default function DailySunburst(props: DailySunburstProps) {
                 </div> :
                 <Plot
                     data={data}
-                    layout={layout1}
+                    layout={layout}
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }

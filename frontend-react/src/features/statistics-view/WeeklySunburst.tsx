@@ -43,56 +43,49 @@ export default function WeeklySunburst(props: WeeklySunburstProps) {
         "marker": { "line": { "width": 2 } },
         "branchvalues": 'total' as const,
     }];
-    var records: LapRecord[] = [];
+    const layout = {
+        margin: { l: 4, r: 4, b: 4, t: 4 },
+        width: 300, height: 300,
+        paper_bgcolor: "hsl(207, 22%, 90%)",
+    };
 
+    let records: LapRecord[] = [];
     for (const day of sinceMonday) {
         const storageObject = loadRecordsFromLocalStorage(day);
         const dayRecords = Object.values(recordsStorageToState(storageObject));
         records = [...records, ...dayRecords];
     }
-
-    const tagLevelCumulative = {} as { [key: number]: { [key: string]: number } };
+    const tagLevelCumulative = {} as { [key: string]: number };
     for (const record of Object.values(records)) {
         const tagLevels = record.tag.split("/");
         for (const [i, level] of tagLevels.entries()) {
-            if (tagLevelCumulative[i] === undefined) {
-                tagLevelCumulative[i] = {};
-            }
             const tagString = tagLevels.slice(0, i + 1).join("/");
-            if (tagLevelCumulative[i][tagString] === undefined) {
-                tagLevelCumulative[i][tagString] = 0;
+            if (tagLevelCumulative[tagString] === undefined) {
+                tagLevelCumulative[tagString] = 0;
             }
             const tmpVal = (record.endTime - record.startTime) / (1000 * 60 * 60);
-            tagLevelCumulative[i][tagString] += Math.round(tmpVal * 100) / 100;
+            tagLevelCumulative[tagString] += Math.round(tmpVal * 100) / 100;
         }
     }
 
     var tagTotalTime = 0;
-    for (const [level, tagTimes] of Object.entries(tagLevelCumulative)) {
-        for (const [tag, totalTime] of Object.entries(tagTimes)) {
-            const tagTree = tag.split("/");
-            var parent = tagTree.slice(0, tagTree.length - 1).join("/");
-            if (parent === "") {
-                parent = "total_" + uid;
-                tagTotalTime += totalTime;
-            }
-            data[0].labels.push(tag === "" ? "no-tag" : tagTree[tagTree.length-1])
-            data[0].parents.push(parent);
-            data[0].ids.push(tag);
-            data[0].values.push(totalTime);
+    for (const [tag, totalTime] of Object.entries(tagLevelCumulative)) {
+        const tagTree = tag.split("/");
+        let parent = tagTree.slice(0, tagTree.length - 1).join("/");
+        if (parent === "") {
+            parent = "total_" + uid;
+            tagTotalTime += totalTime;
         }
-
+        data[0].parents.push(parent);
+        data[0].ids.push(tag);
+        data[0].labels.push(tagTree[tagTree.length - 1]);
+        data[0].values.push(totalTime);
     }
     data[0].labels.push("total");
     data[0].ids.push("total_" + uid);
     data[0].parents.push("");
     data[0].values.push(tagTotalTime);
 
-    const layout1 = {
-        margin: { l: 4, r: 4, b: 4, t: 4 },
-        width: 300, height: 300,
-        paper_bgcolor: "hsl(207, 22%, 90%)",
-    };
     function monthDay(date: string) {
         return date.split("/").slice(1).join("/");
     }
@@ -121,7 +114,7 @@ export default function WeeklySunburst(props: WeeklySunburstProps) {
                 </div>:
                 <Plot
                     data={data}
-                    layout={layout1}
+                    layout={layout}
                     config={{ modeBarButtonsToRemove: ['toImage'] }}
                 />
             }
