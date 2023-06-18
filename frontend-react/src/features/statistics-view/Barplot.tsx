@@ -112,7 +112,7 @@ export default function Barplot(props: BarplotProps) {
                 yMin: weeklyAverage,
                 yMax: weeklyAverage,
                 borderWidth: 2,
-                backgroundColor: "hsl(207, 62%, 27%)",
+                borderColor: "hsl(207, 62%, 27%)",
                 label: {
                     display: true,
                     content: `Average: ${weeklyAverage.toFixed(2)}`,
