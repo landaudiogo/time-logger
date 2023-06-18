@@ -70,8 +70,8 @@ export default function Tag(props: TagProps) {
         options: { label: string }[],
         { inputValue }: { inputValue: string }
     ) {
-        inputValue = inputValue.trim();
-        const filtered = options.filter(option => option.label.includes(inputValue));
+        inputValue = inputValue.trim().toLowerCase();
+        const filtered = options.filter(option => option.label.toLowerCase().includes(inputValue));
         return filtered.length === 0 ?
             [{ label: uid }] :
             filtered
