@@ -7,8 +7,9 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend, 
 } from 'chart.js';
+import annotationPlugin from "chartjs-plugin-annotation";
 import { Bar, getElementAtEvent } from 'react-chartjs-2';
 import { 
     printDateComponent, loadRecordsFromLocalStorage, recordsStorageToState,
@@ -25,7 +26,8 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    annotationPlugin
 );
 
 
@@ -51,6 +53,7 @@ export default function Barplot(props: BarplotProps) {
                     weight: "normal",
                 }
             },
+            annotation: {},
         },
     };
 
@@ -100,6 +103,26 @@ export default function Barplot(props: BarplotProps) {
             },
         ],
     };
+    const weeklyTotal = Object.values(allDays).reduce((acc, dayTotal) => acc + dayTotal, 0);
+    const weeklyAverage = weeklyTotal/7;
+    options.plugins.annotation = {
+        annotations: {
+            line1: {
+                type: "line",
+                yMin: weeklyAverage,
+                yMax: weeklyAverage,
+                borderWidth: 2,
+                backgroundColor: "hsl(207, 62%, 27%)",
+                label: {
+                    display: true,
+                    content: `Average: ${weeklyAverage.toFixed(2)}`,
+                    position: "middle",
+                    backgroundColor: "hsl(207, 62%, 27%)",
+                }
+
+            }
+        }
+    }
 
     return (
         <div className="st-chart-container">
