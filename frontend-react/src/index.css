@@ -4,6 +4,10 @@
     padding: 0;
 }
 
+#root {
+    min-width: fit-content;
+}
+
 body {
     margin: 0;
     padding: 0;

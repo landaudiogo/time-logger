@@ -1,5 +1,6 @@
 
-.dr-body-record-row:hover td:not([rowspan]){
+.dr-body-record-row:hover td:not([rowspan]),
+.dr-body-record-row:hover td[rowspan="1"] {
     background-color: var(--primary-7)
 }
 
@@ -11,10 +12,12 @@
 }
 
 .stopwatch-page {
-    width: 600px;
+    width: fit-content;
     display: flex; 
     flex-direction: column;
     align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .dr-table-container {
