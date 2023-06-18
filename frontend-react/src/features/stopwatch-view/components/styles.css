@@ -1,3 +1,15 @@
+
+.dr-body-record-row:hover td:not([rowspan]){
+    background-color: var(--primary-7)
+}
+
+.dr-body-record-row-selected td:not([rowspan]){
+    background-color: var(--primary-6-8)
+}
+.dr-body-record-row-selected:hover td:not([rowspan]){
+    background-color: var(--primary-6-9)
+}
+
 .stopwatch-page {
     width: 600px;
     display: flex; 
@@ -13,14 +25,58 @@
     margin-bottom: 16px;
 }
 
+.dr-table-container table thead tr th {
+    border-right: 1px solid rgba(224, 224, 224, 1);
+}
+.dr-table-container table tbody tr td {
+    border-right: 1px solid rgba(224, 224, 224, 1);
+}
+
+.dr-table-container 
+table tbody tr td 
+.MuiFormControl-root
+.MuiInputBase-root {
+    color: var(--primary-1);
+    font-size: 14px;
+    height: 40px;
+}
+
+.dr-table-container 
+table tbody tr td 
+.tag-container
+.MuiAutocomplete-root
+.MuiFormControl-root
+.MuiInputBase-root {
+    height: 40px;
+}
+
+.dr-table-container 
+table tbody tr td 
+.tag-container
+.MuiAutocomplete-root
+.MuiFormControl-root
+.MuiInputBase-root 
+input {
+    font-size: 14px;
+    color: var(--primary-1);
+}
+
 .dr-table-container .MuiTableCell-root {
     color: var(--primary-1);
-    max-width: 30ch;
+}
+
+.dr-table-time-column {
+    min-width: 140px;
+    max-width: 140px;
+}
+
+.dr-table-tag-column {
+    min-width: 210px;
 }
 
 .dr-table-button {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-width: 1px; 
     border-color: var(--neutral-3); 
     font-weight: 550;
@@ -46,25 +102,21 @@
     background-color: var(--neutral-7);
 }
 
+.dr-table-button-accent-green {
+    color: var(--accent-green-3);
+}
+.dr-table-button-accent-green:hover {
+    background-color: var(--accent-green-6-5);
+}
+.dr-table-button-accent-green:active {
+    background-color: var(--neutral-7);
+}
+
 .dr-cell-editing {
     background-color: var(--neutral-7);
 }
 .dr-cell-editing:focus {
     background-color: var(--neutral-6);
-}
-
-.dr-cell-tag-editing {
-    max-width: 130px;
-}
-
-.dr-cell-display-tag {
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    min-width: 40px;
-    min-height: 20px;
-    max-width: 30ch;
 }
 
 .dr-cell-time-editing {
@@ -146,12 +198,6 @@
     background-color: var(--accent-red-5);
 }
 
-.stopwatch-input-tag {
-    width: var(--content-width);
-    background-color: var(--neutral-6);
-    font-size: 16px;
-    height: 32px;
-}
-.stopwatch-input-tag:focus {
-    background-color: var(--neutral-5);
+.stopwatch-tag-container {
+    margin-top: 16px;
 }

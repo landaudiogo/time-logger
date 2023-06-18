@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
 import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
-import { tagAdded, addRecord } from "features/stopwatch-view/store";
+import { tagAdded, addRecord, selectStopwatch } from "features/stopwatch-view/store";
 import { Tag } from "features/tag";
 
 import { timerDurationAdded, selectTimer } from "../store";
@@ -16,6 +16,7 @@ enum TimerUnit {
 
 
 export default function Timer() {
+    const tag = useSelector(selectStopwatch).tag;
     const { elapsedTime, stopwatch, handleStart, handleStop } = useStopwatch();
     const dispatch: AppDispatch = useDispatch();
     const timerDurationStore = useSelector(selectTimer);
@@ -151,8 +152,11 @@ export default function Timer() {
                     <button className="timer-button timer-button-start" onClick={onStart}>start</button>
                     <button className="timer-button timer-button-stop" onClick={handleStop}>stop</button>
                 </div>
-                <div>
-                    <Tag/>
+                <div className="timer-tag-container">
+                    <Tag 
+                        value={tag} 
+                        onTagChange={(tag: string) => dispatch(tagAdded({tag: tag}))}
+                    />
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,8 +8,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { AppDispatch } from "store";
+import { Tag } from "features/tag";
 
 import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
 import { LapRecord, Records } from "../types/records";
@@ -26,161 +32,154 @@ type tagRecordEntryProps = {
         rowSpan: number
     }
 }
+const ShowDeleteContext = createContext<React.Dispatch<React.SetStateAction<string[]>>>(
+    () => {}
+);
 
-function validateTimeInput(timeString: string) {
-    if (timeString.match("[0-9]{2}:[0-9]{2}:[0-9]{2}") === null) {
-        console.log("Invalid time string");
-        return false;
-    }
-    return true;
-}
 
 function TagRecordEntry(props: tagRecordEntryProps) {
     const dispatch: AppDispatch = useDispatch();
-    const [editingTag, setEditingTag] = useState<boolean>(false);
-    const [editingStartTime, setEditingStartTime] = useState<boolean>(false);
-    const [editingEndTime, setEditingEndTime] = useState<boolean>(false);
+    const [editing, setEditing] = useState<boolean>(false);
+    const [selected, setSelected] = useState<boolean>(false);
+    const setSelectedRecords = useContext(ShowDeleteContext);
     const { 
         lapRecord, 
         firstRecordData
     } = props;
+    const [startTime, setStartTime] = useState<Date>(new Date(lapRecord.startTime));
+    const [endTime, setEndTime] = useState<Date>(new Date(lapRecord.endTime));
+    const [tag, setTag] = useState<string>(lapRecord.tag);
 
-    function editTag(value: string) { 
-        const newRecord = {...lapRecord};
-        newRecord.tag = value
-        dispatch(modifyRecord(newRecord));
-        setEditingTag(false);
-    }
-    function tagHandleKeyDown(e: React.KeyboardEvent) {
-        if (e.key !== "Enter") 
-            return;
-        const target = e.target as HTMLInputElement;
-        editTag(target.value);
-    }
-
-    function editStartTime(value: string) {
-        const newRecord = {...lapRecord};
-        if (!validateTimeInput(value)) { 
-            return
+    useEffect(() => {
+        if (editing === true) {
+            setSelected(false);
         }
-        const timeComponents = value.split(":").map(numStr => parseInt(numStr));
-        const date = new Date(lapRecord.startTime);
-        date.setHours(0, 0, 0, 0);
-        date.setHours(timeComponents[0]);
-        date.setMinutes(timeComponents[1]);
-        date.setSeconds(timeComponents[2]);
-        newRecord.startTime = date.getTime();
-        if (newRecord.startTime > newRecord.endTime) { 
-            console.log("Start time cannot be bigger than end time");
-            return;
-        }
-        dispatch(modifyRecord(newRecord));
-        setEditingStartTime(false);
-    }
+    }, [editing])
 
-    function startHandleKeyDown(e: React.KeyboardEvent) {
-        if (e.key !== "Enter") 
-            return;
-        const target = e.target as HTMLInputElement;
-        const value = target.value; 
-        editStartTime(value);
-    }
-
-    function editEndTime(value: string) {
-        if (!validateTimeInput(value)) { 
-            return
-        }
-        const newRecord = {...lapRecord};
-        const timeComponents = value.split(":").map(numStr => parseInt(numStr));
-        let date = new Date(lapRecord.startTime);
-        date.setHours(0, 0, 0, 0);
-        date.setHours(timeComponents[0]);
-        date.setMinutes(timeComponents[1]);
-        date.setSeconds(timeComponents[2]);
-        if (newRecord.startTime > date.getTime()) {
-            newRecord.endTime = date.getTime() + 1000*60*60*24;
+    useEffect(() => {
+        if (selected === false) {
+            setSelectedRecords((curr) => {
+                return curr.filter(lapId => lapId !== lapRecord.id );
+            })
         } else {
-            newRecord.endTime = date.getTime();
+            setSelectedRecords((curr) => {
+                if (curr.includes(lapRecord.id)) {
+                    return curr;
+                }
+                curr.push(lapRecord.id);
+                return [...curr];
+            })
         }
-        dispatch(modifyRecord(newRecord));
-        setEditingEndTime(false);
-    }
+    }, [selected])
 
-    function endHandleKeyDown(e: React.KeyboardEvent) {
-        if (e.key !== "Enter") 
+    function changeStartTime(newValue: Date | null) {
+        if (newValue === null || isNaN(newValue.getTime())) {
             return;
-        const target = e.target as HTMLInputElement;
-        const value = target.value; 
-        editEndTime(value);
+        }
+        setStartTime(newValue);
     }
 
-    function handleDelete() {
-        dispatch(deleteRecord(lapRecord.id));
+    const changeEndTime = (newValue: Date | null) => {
+        if (newValue === null || isNaN(newValue.getTime())) {
+            return;
+        }
+        if (newValue.getTime() < startTime.getTime()) {
+            newValue = new Date(newValue.getTime() + 1000*60*60*24);
+        }
+        setEndTime(newValue);
+    }
+
+    function confirmEdit(e: React.MouseEvent) {
+        dispatch(modifyRecord({
+            ...lapRecord, 
+            tag, 
+            startTime: startTime.getTime(), 
+            endTime: endTime.getTime(),
+        }))
+        setEditing(false);
+        e.stopPropagation();
     }
 
     return (
-        <TableRow>
+        <TableRow 
+            className={`dr-body-record-row ${selected ? "dr-body-record-row-selected":""}`}
+            onClick={() => {
+                if (editing === false) {
+                    setSelected((curr) => !curr)
+                }
+            }}
+        >
             <TableCell 
                 align="left" 
             >
-                <button 
-                    className="dr-table-button dr-table-button-accent-red"
-                    onClick={handleDelete}
-                >
-                    <DeleteOutlineIcon fontSize="small"/>
-                </button>
+                {editing ? 
+                    <button 
+                        className="dr-table-button dr-table-button-accent-green"
+                        onClick={confirmEdit}
+                    >
+                        <CheckOutlinedIcon fontSize="small"/>
+                    </button>:
+                    <button 
+                        className="dr-table-button"
+                        onClick={(e) => {
+                            setEditing(true);
+                            e.stopPropagation();
+                        }}
+                    >
+                        <EditOutlinedIcon fontSize="small"/>
+                    </button>
+                }
             </TableCell>
             <TableCell 
-                align="center"
+                align="left"
+                className="dr-table-tag-column"
             >
-                {editingTag ? 
-                    <input 
-                        className="dr-cell-editing dr-cell-tag-editing"
-                        onKeyDown={tagHandleKeyDown}
-                        defaultValue={lapRecord.tag}
-                        onBlur={(e) => editTag(e.currentTarget.value)}
-                        autoFocus
+                {editing ? 
+                    <Tag 
+                        value={tag}
+                        onTagChange={(tag) => setTag(tag)}
                     />:
-                    <p
-                        onClick={() => setEditingTag(true)}
-                        className="dr-cell-display-tag"
-                    >
+                    <p className="dr-cell-display-tag">
                         {lapRecord.tag}
                     </p>
                 }
             </TableCell>
             <TableCell 
                 align="right"
+                className="dr-table-time-column"
             >
-                {editingStartTime ? 
-                    <input 
-                        className="dr-cell-editing dr-cell-time-editing"
-                        onKeyDown={startHandleKeyDown}
-                        defaultValue={printTimeComponent(lapRecord.startTime)}
-                        onBlur={(e) => editStartTime(e.currentTarget.value)}
-                        autoFocus
-                    />:
-                    <p
-                        onClick={() => setEditingStartTime(true)}
-                    >
+                {editing ? 
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimeField
+                            label="Start"
+                            format="HH:mm:ss"
+                            size="small"
+                            defaultValue={new Date(lapRecord.startTime)}
+                            value={startTime}
+                            onChange={changeStartTime}
+                        />
+                    </LocalizationProvider>:
+                    <p>
                         {printTimeComponent(lapRecord.startTime)}
                     </p>
                 }
             </TableCell>
             <TableCell 
                 align="right"
+                className="dr-table-time-column"
             >
-                {editingEndTime ? 
-                    <input 
-                        className="dr-cell-editing dr-cell-time-editing"
-                        onKeyDown={endHandleKeyDown}
-                        defaultValue={printTimeComponent(lapRecord.endTime)}
-                        onBlur={(e) => editEndTime(e.currentTarget.value)}
-                        autoFocus
-                    />:
-                    <p
-                        onClick={() => setEditingEndTime(true)}
-                    >
+                {editing ? 
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimeField
+                            label="End"
+                            format="HH:mm:ss"
+                            size="small"
+                            defaultValue={new Date(lapRecord.startTime)}
+                            value={endTime}
+                            onChange={changeEndTime}
+                        />
+                    </LocalizationProvider>:
+                    <p>
                         {printTimeComponent(lapRecord.endTime)}
                     </p>
                 }
@@ -188,7 +187,10 @@ function TagRecordEntry(props: tagRecordEntryProps) {
             <TableCell 
                 align="right"
             >
-                {printTimeComponent(lapRecord.endTime - lapRecord.startTime, "UTC")}
+                {editing? 
+                    printTimeComponent(endTime.getTime() - startTime.getTime(), "UTC"):
+                    printTimeComponent(lapRecord.endTime - lapRecord.startTime, "UTC")
+                }
             </TableCell>
             {(firstRecordData !== undefined) &&
                 <TableCell 
@@ -237,6 +239,7 @@ type DailyRecordsProps = {
 export default function DailyRecords(props: DailyRecordsProps) {
     const day = props.day;
     const records = useSelector(selectRecords);
+    const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
     const dispatch: AppDispatch = useDispatch();
 
     const stateRecords: Records = {};
@@ -266,40 +269,72 @@ export default function DailyRecords(props: DailyRecordsProps) {
         }))
     }
 
+    const handleDelete = () => {
+        for (const recordId of selectedRecords) {
+            dispatch(deleteRecord(recordId));
+        }
+        setSelectedRecords([]);
+    }
+
     return (
         <div>
-            <TableContainer className="dr-table-container">
-                <Table sx={{ minWidth: "500px" }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="left">
-                                <button
-                                    className="dr-table-button"
-                                    onClick={handleAdd}
+            <ShowDeleteContext.Provider value={setSelectedRecords}>
+                <TableContainer className="dr-table-container">
+                    <Table sx={{ minWidth: "500px" }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="left">
+                                    {selectedRecords.length > 0 ? 
+                                        <button
+                                            className="dr-table-button dr-table-button-accent-red"
+                                            onClick={handleDelete}
+                                        >
+                                            <DeleteOutlineIcon fontSize="small"/>
+                                        </button>:
+                                        <button
+                                            className="dr-table-button"
+                                            onClick={handleAdd}
+                                        >
+                                            <AddIcon fontSize="small"/>
+                                        </button> 
+                                    }
+                                </TableCell>
+                                <TableCell 
+                                    align="center"
+                                    className="dr-table-tag-column"
                                 >
-                                    <AddIcon fontSize="small"/>
-                                </button>
-                            </TableCell>
-                            <TableCell align="center">Tag</TableCell>
-                            <TableCell align="center">Start Time</TableCell>
-                            <TableCell align="center">End Time</TableCell>
-                            <TableCell align="center">Split</TableCell>
-                            <TableCell align="center">Total Time</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {Object.keys(tagRecords).map((key) => tagRecordsRows(tagRecords[key]))}
-                        <TableRow>
-                            <TableCell colSpan={5} align="right">
-                                <strong>Total Time:</strong>
-                            </TableCell>
-                            <TableCell align="right">
-                                <strong>{printTimeComponent(totalTime, "UTC")}</strong>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                                    Tag
+                                </TableCell>
+                                <TableCell 
+                                    align="center" 
+                                    className="dr-table-time-column"
+                                >
+                                    Start Time
+                                </TableCell>
+                                <TableCell 
+                                    align="center" 
+                                    className="dr-table-time-column"
+                                >
+                                    End Time
+                                </TableCell>
+                                <TableCell align="center">Split</TableCell>
+                                <TableCell align="center">Total Time</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {Object.keys(tagRecords).map((key) => tagRecordsRows(tagRecords[key]))}
+                            <TableRow>
+                                <TableCell colSpan={5} align="right">
+                                    <strong>Total Time:</strong>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <strong>{printTimeComponent(totalTime, "UTC")}</strong>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </ShowDeleteContext.Provider>
         </div>
     );
 }

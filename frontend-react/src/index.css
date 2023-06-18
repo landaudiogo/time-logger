@@ -26,6 +26,8 @@ body {
     --primary-5: hsl(207, 60%, 61%);
     --primary-6: hsl(206, 78%, 81%);
     --primary-6-5: hsl(206, 78%, 90%);
+    --primary-6-8: hsl(206, 100%, 90%);
+    --primary-6-9: hsl(206, 100%, 94%);
     --primary-7: hsl(206, 100%, 96%);
 
     --accent-green-1: hsl(155, 59%, 20%);
@@ -34,6 +36,7 @@ body {
     --accent-green-4: hsl(145, 55%, 48%);
     --accent-green-5: hsl(145, 57%, 65%);
     --accent-green-6: hsl(141, 67%, 79%);
+    --accent-green-6-5: hsl(141, 67%, 93%);
     --accent-green-7: hsl(141, 80%, 93%);
 
     --accent-red-1: hsl(0, 60%, 23%);
@@ -63,7 +66,7 @@ body {
 
 input {
     border-radius: var(--border-radius);
-    background-color: var(--neutral-5);
+    background-color: transparent;
     border-color: var(--neutral-1);
     border-width: 0px;
     padding: 0.5em;
@@ -71,7 +74,7 @@ input {
 }
 input:focus {
     outline: none;
-    background-color: var(--neutral-4);
+    background-color: transparent;
 }
 
 button { 

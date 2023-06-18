@@ -7,19 +7,22 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { AppDispatch } from "store";
 import { uuid } from "lib";
-import { tagAdded, selectStopwatch } from "features/stopwatch-view";
-
 
 import { selectTags, addTag, deleteTag } from "../store/tagsSlice";
-import { TagT } from "../types";
 
 import "./styles.css";
 
+
 const uid = uuid();
 
-export default function Tag() {
+type TagProps = {
+    onTagChange: (tag: string) => void,
+    value: string,
+}
+
+export default function Tag(props: TagProps) {
     const dispatch: AppDispatch = useDispatch();
-    const inputValue = useSelector(selectStopwatch).tag;
+    const inputValue = props.value;
     const inputValueRef = useRef<string>(inputValue);
     inputValueRef.current = inputValue;
     const tags = useSelector(selectTags);
@@ -38,7 +41,7 @@ export default function Tag() {
         newInputValue: string
     )  {
         if (newInputValue !== uid) {
-            dispatch(tagAdded({tag: newInputValue}));
+            props.onTagChange(newInputValue);
         }
     }
 
@@ -60,7 +63,7 @@ export default function Tag() {
             value = inputValueRef.current;
         }
         value = value.trim();
-        dispatch(tagAdded({tag: value}));
+        props.onTagChange(value);
     }
 
     function customFilter(
@@ -117,9 +120,9 @@ export default function Tag() {
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
                 onChange={handleChange}
-                renderInput={
-                    (params) => <TextField {...params} label="tag" placeholder="work/project/report"/>
-                }
+                renderInput={(params) => (
+                    <TextField {...params} label="tag" placeholder="work/project/report"/>
+                )}
                 renderOption={renderOption}
                 filterOptions={customFilter}
                 isOptionEqualToValue={

@@ -5,7 +5,6 @@ import { uuid } from "lib";
 import { addTag } from "features/tag";
 
 import { selectStopwatch, stopwatchInitialized } from "../store/stopwatchSlice";
-import { Stopwatch } from "../types/stopwatch";
 import { LapRecord, Records } from "../types/records";
 import { 
     loadRecordsFromLocalStorage, recordsStorageToState, 

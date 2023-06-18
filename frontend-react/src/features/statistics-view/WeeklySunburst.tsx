@@ -1,14 +1,10 @@
 import React, { useState, useRef } from "react";
 import Plot from 'react-plotly.js';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { getPersistedDays } from "lib/localstorage";
 import { uuid } from "lib";
 import { 
-    validateDateInput, printDateComponent,
-    loadRecordsFromLocalStorage, recordsStorageToState,
+    printDateComponent, loadRecordsFromLocalStorage, recordsStorageToState,
 } from "features/stopwatch-view";
 
 import { LapRecord } from "../stopwatch-view";

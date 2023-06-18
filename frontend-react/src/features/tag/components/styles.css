@@ -1,17 +1,11 @@
 .tag-input { 
-    margin-top: 16px;
     width: 170px;
-    background-color: var(--neutral-6);
 }
 
 .tag-input input {
-    background-color: var(--neutral-6);
     box-shadow: none;
     overflow-x: scroll;
     text-overflow: clip !important;
-}
-.tag-input input:focus {
-    background-color: var(--neutral-6);
 }
 
 .tag-no-labels { 
@@ -25,7 +19,8 @@
 }
 
 .tag-option { 
-    width: 90%;
+    width: 100%;
+    padding-right: 8px;
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -33,5 +28,31 @@
 }
 
 .tag-container .MuiAutocomplete-popper {
-    width: 220px !important;
+    width: fit-content !important;
 } 
+
+
+.tag-container 
+.MuiAutocomplete-popper 
+.MuiPaper-root
+.MuiAutocomplete-listbox::-webkit-scrollbar {
+    width: 5px;
+}
+
+.tag-container 
+.MuiAutocomplete-popper 
+.MuiPaper-root
+.MuiAutocomplete-listbox::-webkit-scrollbar-track {
+    background-color: transparent;
+    padding: 2px;
+}
+
+.tag-container 
+.MuiAutocomplete-popper 
+.MuiPaper-root
+.MuiAutocomplete-listbox::-webkit-scrollbar-thumb {
+    margin: 4px 0;
+    background-color: var(--neutral-3);
+    border-radius: 3px;
+    outline: 1px solid var(--neutral-5);
+}

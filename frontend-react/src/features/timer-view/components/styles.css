@@ -121,3 +121,7 @@
 .timer-input-tag:focus {
     background-color: var(--neutral-5);
 }
+
+.timer-tag-container {
+    margin-top: 16px;
+}
