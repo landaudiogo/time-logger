@@ -117,7 +117,9 @@ export default function Tag() {
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
                 onChange={handleChange}
-                renderInput={(params) => <TextField {...params} label="tag" />}
+                renderInput={
+                    (params) => <TextField {...params} label="tag" placeholder="work/project/report"/>
+                }
                 renderOption={renderOption}
                 filterOptions={customFilter}
                 isOptionEqualToValue={

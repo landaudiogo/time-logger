@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import { printTimeComponent } from "../lib/dateParsing"
-import { selectRecords } from "../store";
 import { useSelector, useDispatch } from "react-redux";
-import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
-import { LapRecord, Records } from "../types/records";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import "./styles.css";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 import { AppDispatch } from "store";
+
+import { modifyRecord, manualRecordAdded, deleteRecord } from "../store/recordsSlice";
+import { LapRecord, Records } from "../types/records";
+import { printTimeComponent } from "../lib/dateParsing"
+import { selectRecords } from "../store";
+
+import "./styles.css";
 
 
 type tagRecordEntryProps = {
@@ -122,7 +127,7 @@ function TagRecordEntry(props: tagRecordEntryProps) {
                     className="dr-table-button dr-table-button-accent-red"
                     onClick={handleDelete}
                 >
-                    &#128465;
+                    <DeleteOutlineIcon fontSize="small"/>
                 </button>
             </TableCell>
             <TableCell 
@@ -272,7 +277,7 @@ export default function DailyRecords(props: DailyRecordsProps) {
                                     className="dr-table-button"
                                     onClick={handleAdd}
                                 >
-                                    &#x2b;
+                                    <AddIcon fontSize="small"/>
                                 </button>
                             </TableCell>
                             <TableCell align="center">Tag</TableCell>
