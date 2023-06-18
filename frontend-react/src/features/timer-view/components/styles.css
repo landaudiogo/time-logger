@@ -66,6 +66,9 @@
 }
 
 .timer-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative; 
     top: -1px;
 
@@ -124,4 +127,9 @@
 
 .timer-tag-container {
     margin-top: 16px;
+}
+
+.timer-icon.MuiSvgIcon-root {
+    width: 28px; 
+    height: 28px;
 }

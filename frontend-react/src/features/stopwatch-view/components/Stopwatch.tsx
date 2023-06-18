@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import StopOutlinedIcon from '@mui/icons-material/StopOutlined';
+
 import { Tag } from "features/tag";
 
 import { StopwatchState } from "../types/stopwatch";
@@ -37,8 +40,18 @@ export default function Stopwatch() {
             <h1 className="stopwatch-header">{getStringElapsedTime(elapsedTime)}</h1>
             <div>
                 <div className="stopwatch-button-container">
-                    <button className="stopwatch-button stopwatch-button-start" onClick={handleStart}>start</button>
-                    <button className="stopwatch-button stopwatch-button-stop" onClick={handleStop}>stop</button>
+                    <button 
+                        className="stopwatch-button stopwatch-button-start" 
+                        onClick={handleStart}
+                    >
+                        <PlayArrowOutlinedIcon className="stopwatch-icon"/>
+                    </button>
+                    <button 
+                        className="stopwatch-button stopwatch-button-stop" 
+                        onClick={handleStop}
+                    >
+                        <StopOutlinedIcon className="stopwatch-icon"/>
+                    </button>
                 </div>
                 <div className="stopwatch-tag-container">
                     <Tag 

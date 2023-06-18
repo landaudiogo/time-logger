@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
 
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import StopOutlinedIcon from '@mui/icons-material/StopOutlined';
+
 import { AppDispatch } from "store";
 import bell from "assets/bell.mp3";
 import { printTimeComponent, StopwatchState, useStopwatch } from "features/stopwatch-view"
@@ -149,8 +152,18 @@ export default function Timer() {
                 {printTimeComponent(timerRemaining.getTime(), "UTC")}</h1>
             <div className="timer-buttons-tag-container">
                 <div className="timer-button-container">
-                    <button className="timer-button timer-button-start" onClick={onStart}>start</button>
-                    <button className="timer-button timer-button-stop" onClick={handleStop}>stop</button>
+                    <button 
+                        className="timer-button timer-button-start" 
+                        onClick={onStart}
+                    >
+                        <PlayArrowOutlinedIcon className="timer-icon"/>
+                    </button>
+                    <button 
+                        className="timer-button timer-button-stop" 
+                        onClick={handleStop}
+                    >
+                        <StopOutlinedIcon className="timer-icon"/>
+                    </button>
                 </div>
                 <div className="timer-tag-container">
                     <Tag 

@@ -154,6 +154,9 @@ input {
 }
 
 .stopwatch-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative; 
     top: -1px;
 
@@ -200,4 +203,9 @@ input {
 
 .stopwatch-tag-container {
     margin-top: 16px;
+}
+
+.stopwatch-icon.MuiSvgIcon-root {
+    width: 28px; 
+    height: 28px;
 }
