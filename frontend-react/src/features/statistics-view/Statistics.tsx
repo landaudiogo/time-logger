@@ -43,7 +43,7 @@ export default function Statistics() {
                     />
                 </LocalizationProvider>
             </div>
-            <Barplot day={day}/>
+            <Barplot day={day} setDay={setDay}/>
             <Cumulative day={day}/>
             <Sunburst day={day}/>
             <DailyRecords day={day} />

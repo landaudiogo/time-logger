@@ -30,10 +30,12 @@ ChartJS.register(
 
 
 type BarplotProps = {
-    day: Date
+    day: Date,
+    setDay: React.Dispatch<React.SetStateAction<Date>>
 }
 
 export default function Barplot(props: BarplotProps) {
+    const setDay = props.setDay;
     const options = {
         responsive: true,
         plugins: {
@@ -108,7 +110,7 @@ export default function Barplot(props: BarplotProps) {
                         return;
                     }
                     const dataIndex = element[0].index;
-                    console.log(data.labels[dataIndex]);
+                    setDay(new Date(data.labels[dataIndex]));
                 }}
             />
         </div>
