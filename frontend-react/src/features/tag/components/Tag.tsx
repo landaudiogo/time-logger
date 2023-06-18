@@ -71,7 +71,17 @@ export default function Tag(props: TagProps) {
         { inputValue }: { inputValue: string }
     ) {
         inputValue = inputValue.trim().toLowerCase();
-        const filtered = options.filter(option => option.label.toLowerCase().includes(inputValue));
+        let exists = false;
+        const filtered = options.filter(option => {
+            if (option.label.toLowerCase() === inputValue) {
+                exists = true;
+                return true;
+            }
+            return option.label.toLowerCase().includes(inputValue)
+        });
+        if (exists === false) {
+            filtered.push({label: uid})
+        }
         return filtered.length === 0 ?
             [{ label: uid }] :
             filtered
