@@ -83,6 +83,13 @@ function TagRecordEntry(props: tagRecordEntryProps) {
         if (newValue === null || isNaN(newValue.getTime())) {
             return;
         }
+        const startDay = new Date(startTime);
+        startDay.setHours(0,0,0,0);
+        const newValueDay = new Date(newValue);
+        newValueDay.setHours(0,0,0,0);
+        newValue = new Date(
+            startDay.getTime() + (newValue.getTime() - newValueDay.getTime())
+        );
         if (newValue.getTime() < startTime.getTime()) {
             newValue = new Date(newValue.getTime() + 1000*60*60*24);
         }
