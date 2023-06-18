@@ -28,6 +28,7 @@
 }
 
 .tag-container .MuiAutocomplete-popper {
+    min-width: 200px;
     width: fit-content !important;
 } 
 
