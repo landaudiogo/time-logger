@@ -44,6 +44,12 @@ export default function Barplot(props: BarplotProps) {
             },
             title: {
                 display: true,
+                text: "Week Summary",
+                color: "hsl(206, 44%, 22%)",
+                font: {
+                    size: 24,
+                    weight: "normal",
+                }
             },
         },
     };
